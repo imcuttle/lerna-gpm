@@ -9,7 +9,7 @@ export function fixture(...args: string[]) {
   return nps.join.apply(nps, [__dirname, 'fixture'].concat(...args))
 }
 {{else}}
-export function fixture(...args) {
+exports.fixture = function fixture(...args) {
   return nps.join.apply(nps, [__dirname, 'fixture'].concat(...args))
 }
 {{/if}}
