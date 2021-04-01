@@ -3,7 +3,7 @@ exports.command = 'import-git'
 exports.describe = `import git repo like git submodule`
 
 exports.builder = (yargs) => {
-  yargs.example('$0 import-git').options({
+  yargs.example('$0 import-git <repo-or-dir>').options({
     heading: {
       group: 'Command Options:',
       describe: 'Markdown heading matching text',
