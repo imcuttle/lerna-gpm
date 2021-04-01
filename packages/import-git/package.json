@@ -1,0 +1,34 @@
+{
+  "name": "lerna-command-import-git",
+  "version": "0.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "余聪 <yucong@yuanfudao.com>",
+  "description": "import git repo like git submodule",
+  "main": "src",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "../../scripts/run test",
+    "packlimit": "../../scripts/run packlimit",
+    "dev": "npm run build -- --watch",
+    "version": "npm test && npm run packlimit"
+  },
+  "dependencies": {
+  },
+  "keywords": [
+    "余聪",
+    "import-git",
+    "余聪",
+    "lerna",
+    "commands",
+    "lerna-commands"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+undefined",
+    "directory": "packages/import-git"
+  }
+}

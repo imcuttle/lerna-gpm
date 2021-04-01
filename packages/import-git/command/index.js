@@ -1,11 +1,9 @@
-const { filterOptions } = require('@lerna/filter-options')
+exports.command = 'import-git'
 
-exports.command = '{{{name}}}'
-
-exports.describe = `{{{description}}}`
+exports.describe = `import git repo like git submodule`
 
 exports.builder = (yargs) => {
-  yargs.example('$0 {{{name}}}').options({
+  yargs.example('$0 import-git').options({
     heading: {
       group: 'Command Options:',
       describe: 'Markdown heading matching text',
@@ -27,7 +25,7 @@ exports.builder = (yargs) => {
     }
   })
 
-  return filterOptions(yargs)
+  return filterable(yargs)
 }
 
 exports.handler = function handler(argv) {
