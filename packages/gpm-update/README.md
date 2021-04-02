@@ -1,24 +1,24 @@
-# lerna-command-import-git
+# lerna-command-gpm-update
 
-[![NPM version](https://img.shields.io/npm/v/lerna-command-import-git.svg?style=flat-square)](https://www.npmjs.com/package/lerna-command-import-git)
-[![NPM Downloads](https://img.shields.io/npm/dm/lerna-command-import-git.svg?style=flat-square&maxAge=43200)](https://www.npmjs.com/package/lerna-command-import-git)
+[![NPM version](https://img.shields.io/npm/v/lerna-command-gpm-update.svg?style=flat-square)](https://www.npmjs.com/package/lerna-command-gpm-update)
+[![NPM Downloads](https://img.shields.io/npm/dm/lerna-command-gpm-update.svg?style=flat-square&maxAge=43200)](https://www.npmjs.com/package/lerna-command-gpm-update)
 [![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://prettier.io/)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
 
-> import git repo like git submodule
+> update git repo
 
 ## Installation
 
 ```bash
-npm install lerna-command-import-git
+npm install lerna-command-gpm-update
 # or use yarn
-yarn add lerna-command-import-git
+yarn add lerna-command-gpm-update
 ```
 
 ## Usage
 
 ```javascript
-const importGit = require('lerna-command-import-git')
+const gpmUpdate = require('lerna-command-gpm-update')
 ```
 
 ## Contributing

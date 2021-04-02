@@ -1,4 +1,4 @@
-const importGit = require('../src')
+const gpmImport = require('../src')
 const nps = require('path')
 const { execSync } = require('child_process')
 const { fixture } = require('./helper')
@@ -10,12 +10,12 @@ const exec = (cmd) => {
   })
 }
 
-describe('importGit', function() {
+describe('gpmImport', function() {
   it(
     'spec case',
     function () {
-      const output = exec('lerna import-git --help')
-      console.log(output)
+      const output = exec('lerna gpm-import abc')
+      console.log('output', output)
     }
   )
 })
