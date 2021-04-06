@@ -4,7 +4,14 @@ const { promisify } = require('util')
 // `git status -s`
 const runGitCommand = async (gitCmd, cwd) => {
   try {
-    const { stdout, stderr } = await promisify(cp.exec)(`git ${gitCmd}`, { cwd, encoding: 'utf8' })
+    const { stdout, stderr } = await promisify(cp.exec)(`git ${gitCmd}`, {
+      cwd,
+      env: {
+        ...process.env,
+        GIT_TERMINAL_PROMPT: '0'
+      },
+      encoding: 'utf8'
+    })
     return stdout.trim()
   } catch (err) {
     throw err
@@ -13,6 +20,10 @@ const runGitCommand = async (gitCmd, cwd) => {
 
 const hasUncommitted = (cwd) => {
   return runGitCommand(`status -s`, cwd).then((changes) => !changes)
+}
+
+const gitRemote = (cwd, remote) => {
+  return runGitCommand(`config --get remote.${remote}.url`)
 }
 
 const getGitSha = (cwd) => {
@@ -69,6 +80,7 @@ module.exports = {
   getCurrentBranch,
   fetch,
   pullRemoteRebase,
+  gitRemote,
   gitCommit,
   getGitSha,
   isBehindRemote,

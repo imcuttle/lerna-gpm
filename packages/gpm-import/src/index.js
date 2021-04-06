@@ -18,26 +18,48 @@ const {
   AsyncSeriesBailHook,
   AsyncSeriesWaterfallHook
 } = require('tapable')
-const { getCurrentBranch, fetch, isBehindRemote } = require('./git-command')
 const { Command } = require('@lerna/command')
+const findUp = require('find-up')
+const { gitRemote, getGitSha } = require('lerna-utils-git-command')
+const { getCurrentBranch, fetch, isBehindRemote, runGitCommand } = require('lerna-utils-git-command')
 const { ValidationError } = require('@lerna/validation-error')
 
 module.exports = factory
+module.exports.importOptions = importOptions
 
 function factory(argv) {
   return new GpmImportCommand(argv)
 }
 
-const getGitRemote = (cwd, remote = 'origin') => {
+function importOptions(yargs) {
   const opts = {
-    cwd,
-    // don't throw, just want boolean
-    reject: false,
-    // only return code, no stdio needed
-    stdio: 'ignore'
+    alias: {
+      group: 'Command Options:',
+      describe: 'Alias to package.json',
+      type: 'boolean'
+    }
+  }
+  return yargs.options(opts).group(Object.keys(opts), 'Import Options:')
+}
+
+
+const ensureGitIgnorePath = (cwd, stopDirPath) => {
+  const foundPath = findUp.sync(
+    (directory) => {
+      if (!directory.startsWith(stopDirPath)) {
+        return findUp.stop
+      }
+      const hasGitIgnore = findUp.sync.exists(nps.join(directory, '.gitignore'))
+      return hasGitIgnore && nps.join(directory, '.gitignore')
+    },
+    { cwd: cwd, type: 'file' }
+  )
+  if (foundPath) {
+    return foundPath
   }
 
-  return execa.sync(`git config --get remote.${remote}.url`, opts).stdout.trim()
+  fs.writeFileSync(nps.join(stopDirPath, '.gitignore'), '')
+  return nps.join(stopDirPath, '.gitignore')
 }
 
 const requireDefault = (mod) => {
@@ -97,7 +119,7 @@ class GpmImportCommand extends Command {
     const { repoOrGitDir, remote } = this.options
     const repoOrGitDirPath = nps.resolve(this.execOpts.cwd, repoOrGitDir)
     if (fs.existsSync(repoOrGitDirPath) && fs.statSync(repoOrGitDirPath).isDirectory()) {
-      const url = getGitRemote(this.execOpts.cwd, remote)
+      const url = gitRemote(this.execOpts.cwd, remote)
       if (!url) {
         throw new ValidationError('', `未找到 ${repoOrGitDirPath} 中 remote.${remote} 地址`)
       }
@@ -153,45 +175,6 @@ class GpmImportCommand extends Command {
     await this.registerPlugins()
 
     await this.hooks.initialize.promise(this)
-
-    const getGitInfo = async (localDir) => {
-      if (await hasUncommitted(localDir)) {
-        throw new ValidationError('GIT', `${localDir} 中具有未提交的改动，请先 git commit`)
-      }
-
-      const branch = await getCurrentBranch()
-      if (!(await fetch(this.options.remote, branch, localDir))) {
-        throw new ValidationError('GIT', `fetch 远端代码失败`)
-      }
-
-      if (!(await isBehindRemote(this.options.remote, branch, localDir))) {
-        throw new ValidationError('GIT', `存在未推送至远端的 git commit`)
-      }
-      const gitUrl = await getGitRemote(localDir, this.options.remote)
-      const gitBranch = branch
-      const gitCheckout = await getGitSha(localDir)
-      return {
-        gitCheckout,
-        gitBranch,
-        gitUrl
-      }
-    }
-
-    const { type, url } = this.repoOrGitDir
-    let tmpInfo
-    if ('file' === type) {
-      await this.gitClone(url, this.targetDir)
-      tmpInfo = await getGitInfo(url)
-    } else {
-      await this.gitClone(url, this.targetDir)
-      tmpInfo = await getGitInfo(this.targetDir)
-    }
-
-    this.writeConfig = {
-      gitRemote: this.options.remote,
-      ...tmpInfo
-    }
-    await this.hooks.writeConfig.promise(this.writeConfig)
   }
 
   async gitClone(url, destDir) {
@@ -226,11 +209,63 @@ class GpmImportCommand extends Command {
   }
 
   async execute() {
+    const { rootPath } = this.project
+    const getGitInfo = async (localDir) => {
+      if (await hasUncommitted(localDir)) {
+        throw new ValidationError('GIT', `${localDir} 中具有未提交的改动，请先 git commit`)
+      }
+
+      const branch = await getCurrentBranch()
+      if (!(await fetch(this.options.remote, branch, localDir))) {
+        throw new ValidationError('GIT', `fetch 远端代码失败`)
+      }
+
+      if (!(await isBehindRemote(this.options.remote, branch, localDir))) {
+        throw new ValidationError('GIT', `存在未推送至远端的 git commit`)
+      }
+      const gitUrl = await gitRemote(localDir, this.options.remote)
+      const gitBranch = branch
+      const gitCheckout = await getGitSha(localDir)
+      return {
+        gitCheckout,
+        gitBranch,
+        gitUrl
+      }
+    }
+
+    const { type, url } = this.repoOrGitDir
+    let tmpInfo
+    const packageDir = this.targetDir
+    if ('file' === type) {
+      await this.gitClone(url, packageDir)
+      tmpInfo = await getGitInfo(url)
+    } else {
+      await this.gitClone(url, packageDir)
+      tmpInfo = await getGitInfo(packageDir)
+    }
+
+    const writeConfig = {
+      gitRemote: this.options.remote,
+      ...tmpInfo
+    }
+    await this.hooks.writeConfig.promise(writeConfig)
+
     await this.writeConfigFile(
-      this.writeConfig.gitUrl,
-      this.writeConfig.gitBranch,
-      this.writeConfig.gitCheckout,
-      this.writeConfig.gitRemote
+      writeConfig.gitUrl,
+      writeConfig.gitBranch,
+      writeConfig.gitCheckout,
+      writeConfig.gitRemote
     )
+
+    // 写 gitignore
+    const gitIgnorePath = ensureGitIgnorePath(rootPath, nps.dirname(packageDir))
+    const gitIgnore = fs.readFileSync(gitIgnorePath, 'utf-8')
+    const ignoreRule = `/${nps.relative(rootPath, packageDir)}/`
+    const alreadyIgnore = gitIgnore.split('\n').some((line) => {
+      return line.trim() === ignoreRule
+    })
+    if (!alreadyIgnore) {
+      fs.writeFileSync(gitIgnorePath, [gitIgnore.trim(), ignoreRule].filter(Boolean).join('\n'))
+    }
   }
 }

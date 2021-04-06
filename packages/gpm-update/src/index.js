@@ -5,6 +5,10 @@
 const fs = require('fs')
 const nps = require('path')
 const { promisify } = require('util')
+const gpmImport = require('lerna-command-gpm-import')
+const { hasUncommitted } = require('lerna-utils-git-command')
+const { isBehindRemote } = require('lerna-utils-git-command')
+const { gitRemote, isGitRepo, getCurrentBranch, fetch, runGitCommand } = require('lerna-utils-git-command')
 
 const { Command } = require('@lerna/command')
 const { getFilteredPackages } = require('@lerna/filter-options')
@@ -21,41 +25,66 @@ class GpmUpdateCommand extends Command {
     return true
   }
   async initialize() {
-    const { heading, input, output } = this.options
+    const { rootPath, rootConfigLocation, config } = this.project
 
-    this.input = nps.resolve(this.project.rootPath, input)
-    this.output = nps.resolve(this.project.rootPath, output || input)
-
-    this.logger.verbose('toc options:', this.options)
-
-    if (!heading) {
-      throw new ValidationError('ENOHEADING', 'You must specify heading')
-    }
-
-    if (!fs.existsSync(this.input) || !fs.statSync(this.input).isFile()) {
-      throw new ValidationError('ENOINPUT', 'You must specify a valid input file')
-    }
-
-    if (!fs.existsSync(this.output) || !fs.statSync(this.output).isFile()) {
-      throw new ValidationError('ENOOUTPUT', 'You must specify a valid output file')
+    if (!config.gpm || !Object.keys(config.gpm).length) {
+      throw new ValidationError('ENOGPM', rootConfigLocation + ' 不存在 gpm 配置')
     }
 
     this.validPackages = await getFilteredPackages(this.packageGraph, this.execOpts, {
-      private: false,
       ...this.options
     })
   }
 
+  async executeUpdateEach(dir, { remote = 'origin', branch = 'master', checkout, url }) {
+    const { rootPath, rootConfigLocation, config } = this.project
+    const dirPath = nps.resolve(rootPath, dir)
+    if (!fs.existsSync(dirPath)) {
+      return new Promise((resolve, reject) => {
+        // fake promise api
+        gpmImport(this.argv).then(resolve, reject)
+      })
+    } else {
+      if (!(await isGitRepo(dirPath))) {
+        throw new ValidationError('ENOGIT', dirPath + ' 非 Git 仓库')
+      }
+      const gitUrl = await gitRemote(dirPath, remote)
+      if (gitUrl !== url) {
+        throw new ValidationError('ENOGIT', 'git remote url 不匹配')
+      }
+
+      if (await hasUncommitted(dirPath)) {
+        throw new ValidationError('GIT', `${dirPath} 中具有未提交的改动，请先 git commit`)
+      }
+
+      if (!(await fetch(remote, branch, dirPath))) {
+        throw new ValidationError('GIT', `fetch 远端代码失败`)
+      }
+
+      if (!(await isBehindRemote(remote, branch, dirPath))) {
+        throw new ValidationError('GIT', `存在未推送至远端的 git commit`)
+      }
+
+      const gitBranch = await getCurrentBranch(dirPath)
+      if (gitBranch !== branch) {
+        await runGitCommand(`checkout ${JSON.stringify(branch)}`, dirPath)
+      }
+
+      if (checkout) {
+        await runGitCommand(`reset --hard ${JSON.stringify(checkout)}`, dirPath)
+      }
+    }
+  }
+
   async execute() {
-    const { heading } = this.options
-    const { output, input } = this
+    const { rootPath, rootConfigLocation, config } = this.project
 
     this.logger.info('valid packages:', this.validPackages.map((pkg) => pkg.name).join(', '))
-    this.logger.verbose('toc generate options:', { heading, input, output })
 
-    const prevContent = await promisify(fs.readFile)(this.input, 'utf8')
-    const newContent = await generate(this.validPackages, nps.dirname(this.input), prevContent, heading)
-
-    await promisify(fs.writeFile)(this.output, newContent)
+    for (const [dir, config] of Object.entries(config.gpm)) {
+      this.logger.info('更新:', dir)
+      await this.executeUpdateEach(dir, config || {})
+      this.logger.info('更新完成:', dir)
+    }
   }
 }

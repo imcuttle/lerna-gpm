@@ -41,7 +41,6 @@ class {{{pascalCase name}}}Command extends Command {
     }
 
     this.validPackages = await getFilteredPackages(this.packageGraph, this.execOpts, {
-      private: false,
       ...this.options
     })
   }

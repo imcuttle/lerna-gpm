@@ -1,33 +1,25 @@
 {
-  "name": "lerna-command-gpm-import",
+  "name": "lerna-utils-git-command",
   "version": "0.0.0",
   "publishConfig": {
     "access": "public"
   },
   "author": "余聪 <yucong@yuanfudao.com>",
-  "description": "import git repo like git submodule",
+  "description": "git command util",
   "main": "src",
   "files": [
     "src"
   ],
   "scripts": {
-    "test": "../../scripts/run test",
     "packlimit": "../../scripts/run packlimit",
     "dev": "npm run build -- --watch",
     "version": "npm test && npm run packlimit"
   },
   "dependencies": {
-    "@lerna/command": "^4.0.0",
-    "@lerna/validation-error": "^4.0.0",
-    "execa": "^5.0.0",
-    "find-up": "^5.0.0",
-    "lerna-utils-git-command": "^0.0.0",
-    "tapable": "^2.2.0",
-    "write-json-file": "^4.3.0"
   },
   "keywords": [
     "余聪",
-    "gpm-import",
+    "git-command",
     "余聪",
     "lerna",
     "commands",
@@ -36,6 +28,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/imcuttle/lerna-commands.git",
-    "directory": "packages/gpm-import"
+    "directory": "packages/git-command"
   }
 }

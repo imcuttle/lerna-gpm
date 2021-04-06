@@ -1,4 +1,5 @@
 const { filterOptions } = require('@lerna/filter-options')
+const { importOptions } = require('lerna-command-gpm-import')
 
 exports.command = 'gpm-update'
 
@@ -27,7 +28,7 @@ exports.builder = (yargs) => {
     }
   })
 
-  return filterOptions(yargs)
+  return importOptions(filterOptions(yargs))
 }
 
 exports.handler = function handler(argv) {
