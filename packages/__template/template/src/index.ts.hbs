@@ -17,6 +17,8 @@ function factory(argv) {
 }
 
 class {{{pascalCase name}}}Command extends Command {
+  static name = '{{{name}}}'
+
   get requiresGit() {
     return true
   }

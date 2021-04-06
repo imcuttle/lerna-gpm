@@ -2,9 +2,9 @@ const cp = require('child_process')
 const { promisify } = require('util')
 
 // `git status -s`
-const runGitCommand = async (gitCmd, cwd) => {
+const runCommand = async (cmd, cwd) => {
   try {
-    const { stdout, stderr } = await promisify(cp.exec)(`git ${gitCmd}`, {
+    const { stdout, stderr } = await promisify(cp.exec)(`${cmd}`, {
       cwd,
       env: {
         ...process.env,
@@ -16,6 +16,11 @@ const runGitCommand = async (gitCmd, cwd) => {
   } catch (err) {
     throw err
   }
+}
+
+// `git status -s`
+const runGitCommand = async (gitCmd, cwd) => {
+  return await runCommand(`git ${gitCmd}`, cwd)
 }
 
 const hasUncommitted = (cwd) => {
@@ -84,5 +89,6 @@ module.exports = {
   gitCommit,
   getGitSha,
   isBehindRemote,
-  gitAdd
+  gitAdd,
+  runCommand
 }

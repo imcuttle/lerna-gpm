@@ -21,6 +21,8 @@ function factory(argv) {
 }
 
 class GpmUpdateCommand extends Command {
+  static name = 'gpm-update';
+
   get requiresGit() {
     return true
   }
@@ -54,15 +56,15 @@ class GpmUpdateCommand extends Command {
       }
 
       if (await hasUncommitted(dirPath)) {
-        throw new ValidationError('GIT', `${dirPath} 中具有未提交的改动，请先 git commit`)
+        throw new ValidationError('ENOGIT', `${dirPath} 中具有未提交的改动，请先 git commit`)
       }
 
       if (!(await fetch(remote, branch, dirPath))) {
-        throw new ValidationError('GIT', `fetch 远端代码失败`)
+        throw new ValidationError('ENOGIT', `fetch 远端代码失败`)
       }
 
       if (!(await isBehindRemote(remote, branch, dirPath))) {
-        throw new ValidationError('GIT', `存在未推送至远端的 git commit`)
+        throw new ValidationError('ENOGIT', `存在未推送至远端的 git commit`)
       }
 
       const gitBranch = await getCurrentBranch(dirPath)
@@ -82,9 +84,9 @@ class GpmUpdateCommand extends Command {
     this.logger.info('valid packages:', this.validPackages.map((pkg) => pkg.name).join(', '))
 
     for (const [dir, config] of Object.entries(config.gpm)) {
-      this.logger.info('更新:', dir)
+      this.logger.info('update:', dir)
       await this.executeUpdateEach(dir, config || {})
-      this.logger.info('更新完成:', dir)
+      this.logger.verbose('更新完成:', dir)
     }
   }
 }
