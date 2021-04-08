@@ -117,9 +117,9 @@ class GpmLockCommand extends Command {
 
     const entries = Object.entries(config.gpm)
     for (const [dir, config] of entries) {
-      this.logger.info('push:', dir)
+      this.logger.info('lock:', dir)
       await this.executeEach(dir, config || {})
-      this.logger.verbose('push done:', dir)
+      this.logger.verbose('lock done:', dir)
     }
 
     if (entries.length && this.options.push) {
