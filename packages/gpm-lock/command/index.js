@@ -1,4 +1,5 @@
 const { filterOptions } = require('@lerna/filter-options')
+const { pushOptions } = require('lerna-command-gpm-push')
 
 exports.command = 'gpm-lock'
 
@@ -6,28 +7,14 @@ exports.describe = `gpm lock version command`
 
 exports.builder = (yargs) => {
   yargs.example('$0 gpm-lock').options({
-    heading: {
+    push: {
       group: 'Command Options:',
-      describe: 'Markdown heading matching text',
-      type: 'string',
-      default: 'Packages'
+      describe: '是否执行 gpm-push',
+      type: 'boolean',
     },
-    input: {
-      group: 'Command Options:',
-      describe: 'Markdown input filename',
-      alias: 'i',
-      type: 'string',
-      default: './README.md'
-    },
-    output: {
-      group: 'Command Options:',
-      describe: 'Markdown output filename',
-      alias: 'o',
-      type: 'string'
-    }
   })
 
-  return filterOptions(yargs)
+  return filterOptions(pushOptions(yargs))
 }
 
 exports.handler = function handler(argv) {

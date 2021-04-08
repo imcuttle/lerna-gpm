@@ -13,9 +13,22 @@ const { ValidationError } = require('@lerna/validation-error')
 const { runCommand, isGitRepo, hasUncommitted } = require('lerna-utils-git-command')
 
 module.exports = factory
+module.exports.pushOptions = pushOptions
 
 function factory(argv) {
   return new GpmPushCommand(argv)
+}
+
+function pushOptions(yargs) {
+  const opts = {
+    'git-push-command': {
+      group: 'Command Options:',
+      describe: 'Git Push Command Template',
+      type: 'string',
+      default: 'git push ${remote} HEAD:refs/for/${branch}'
+    }
+  }
+  return yargs.options(opts).group(Object.keys(opts), 'Push Options:')
 }
 
 class GpmPushCommand extends Command {

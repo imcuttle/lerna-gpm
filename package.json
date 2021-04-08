@@ -49,7 +49,7 @@
       "**/__test{s,}__/*.(spec|test).{t,j}s{x,}"
     ]
   },
-  "packagePrefix": "lerna-command-",
+  "packagePrefix": "lerna-utils-",
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"

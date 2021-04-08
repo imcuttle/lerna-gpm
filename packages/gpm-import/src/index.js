@@ -6,6 +6,7 @@
 const nps = require('path')
 const fs = require('fs')
 const execa = require('execa')
+const template = require('lodash.template')
 const writeJsonFile = require('write-json-file')
 const {
   SyncHook,
@@ -20,8 +21,9 @@ const {
 } = require('tapable')
 const { Command } = require('@lerna/command')
 const findUp = require('find-up')
+const { getGitInfoWithValidate } = require('lerna-utils-gpm')
 const { gitRemote, getGitSha } = require('lerna-utils-git-command')
-const { getCurrentBranch, fetch, isBehindRemote, runGitCommand } = require('lerna-utils-git-command')
+const { getCurrentBranch, fetch, isBehindRemote, runCommand, runGitCommand } = require('lerna-utils-git-command')
 const { ValidationError } = require('@lerna/validation-error')
 
 module.exports = factory
@@ -41,7 +43,6 @@ function importOptions(yargs) {
   }
   return yargs.options(opts).group(Object.keys(opts), 'Import Options:')
 }
-
 
 const ensureGitIgnorePath = (cwd, stopDirPath) => {
   const foundPath = findUp.sync(
@@ -181,7 +182,13 @@ class GpmImportCommand extends Command {
     const { rootPath } = this.project
     const data = { url, destDir, rootPath }
     await this.hooks.git.preClone.promise(data)
-    await runGitCommand(`clone ${JSON.stringify(data.url)} ${data.destDir}`, data.rootPath)
+    await runCommand(
+      template(this.options.gitCloneCommand || 'git clone ${url} ${destDir}')({
+        url: JSON.stringify(url),
+        destDir: data.destDir
+      }),
+      data.rootPath
+    )
     await this.hooks.git.postClone.promise(data)
   }
 
@@ -210,28 +217,7 @@ class GpmImportCommand extends Command {
 
   async execute() {
     const { rootPath } = this.project
-    const getGitInfo = async (localDir) => {
-      if (await hasUncommitted(localDir)) {
-        throw new ValidationError('GIT', `${localDir} 中具有未提交的改动，请先 git commit`)
-      }
-
-      const branch = await getCurrentBranch()
-      if (!(await fetch(this.options.remote, branch, localDir))) {
-        throw new ValidationError('GIT', `fetch 远端代码失败`)
-      }
-
-      if (!(await isBehindRemote(this.options.remote, branch, localDir))) {
-        throw new ValidationError('GIT', `存在未推送至远端的 git commit`)
-      }
-      const gitUrl = await gitRemote(localDir, this.options.remote)
-      const gitBranch = branch
-      const gitCheckout = await getGitSha(localDir)
-      return {
-        gitCheckout,
-        gitBranch,
-        gitUrl
-      }
-    }
+    const getGitInfo = async (localDir) => getGitInfoWithValidate(localDir, {remote: this.options.remote})
 
     const { type, url } = this.repoOrGitDir
     let tmpInfo

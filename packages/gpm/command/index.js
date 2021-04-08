@@ -1,12 +1,11 @@
 const { filterOptions } = require('@lerna/filter-options')
-const { importOptions } = require('lerna-command-gpm-import')
 
-exports.command = 'gpm-update'
+exports.command = 'gpm'
 
-exports.describe = `update git repo`
+exports.describe = `gpm utils`
 
 exports.builder = (yargs) => {
-  yargs.example('$0 gpm-update').options({
+  yargs.example('$0 gpm').options({
     heading: {
       group: 'Command Options:',
       describe: 'Markdown heading matching text',
@@ -28,7 +27,7 @@ exports.builder = (yargs) => {
     }
   })
 
-  return filterOptions(importOptions(yargs))
+  return filterOptions(yargs)
 }
 
 exports.handler = function handler(argv) {

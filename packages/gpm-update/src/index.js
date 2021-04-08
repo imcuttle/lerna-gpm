@@ -59,6 +59,7 @@ class GpmUpdateCommand extends Command {
         throw new ValidationError('ENOGIT', `${dirPath} 中具有未提交的改动，请先 git commit`)
       }
 
+      // 按照配置的 remote / url / branch / checkout 进行更新
       if (!(await fetch(remote, branch, dirPath))) {
         throw new ValidationError('ENOGIT', `fetch 远端代码失败`)
       }
@@ -74,6 +75,7 @@ class GpmUpdateCommand extends Command {
 
       if (checkout) {
         await runGitCommand(`reset --hard ${JSON.stringify(checkout)}`, dirPath)
+        await runGitCommand(`clean -fd`, dirPath)
       }
     }
   }

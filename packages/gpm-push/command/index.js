@@ -1,20 +1,14 @@
 const { filterOptions } = require('@lerna/filter-options')
+const { pushOptions } = require('..')
 
 exports.command = 'gpm-push'
 
 exports.describe = `gpm push command`
 
 exports.builder = (yargs) => {
-  yargs.example('$0 gpm-push').options({
-    'git-push-command': {
-      group: 'Command Options:',
-      describe: 'Git Push Command Template',
-      type: 'string',
-      default: 'git push ${remote} HEAD:refs/for/${branch}'
-    }
-  })
+  yargs.example('$0 gpm-push')
 
-  return filterOptions(yargs)
+  return filterOptions(pushOptions(yargs))
 }
 
 exports.handler = function handler(argv) {

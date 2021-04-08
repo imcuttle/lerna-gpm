@@ -1,11 +1,11 @@
 {
-  "name": "lerna-command-gpm-lock",
+  "name": "lerna-utils-gpm",
   "version": "0.0.0",
   "publishConfig": {
     "access": "public"
   },
   "author": "余聪 <yucong@yuanfudao.com>",
-  "description": "gpm lock version command",
+  "description": "gpm utils",
   "main": "src",
   "files": [
     "src"
@@ -17,17 +17,12 @@
     "version": "npm test && npm run packlimit"
   },
   "dependencies": {
-    "@lerna/command": "^4.0.0",
-    "@lerna/filter-options": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
-    "lerna-command-gpm-push": "^0.0.0",
-    "lerna-utils-git-command": "^0.0.0",
-    "lerna-utils-gpm": "^0.0.0",
-    "write-json-file": "^4.3.0"
+    "lerna-utils-git-command": "^0.0.0"
   },
   "keywords": [
     "余聪",
-    "gpm-lock",
+    "gpm",
     "余聪",
     "lerna",
     "commands",
@@ -36,6 +31,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/imcuttle/lerna-commands.git",
-    "directory": "packages/gpm-lock"
+    "directory": "packages/gpm"
   }
 }
