@@ -65,7 +65,7 @@ class GpmPullCommand extends Command {
   }
 
   async execute() {
-    const { rootPath, rootConfigLocation, config } = this.project
+    const { config } = this.project
     this.logger.info('valid packages:', this.validPackages.map((pkg) => pkg.name).join(', '))
 
     const entries = Object.entries(config.gpm)
