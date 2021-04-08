@@ -21,6 +21,7 @@ const {
 } = require('tapable')
 const { Command } = require('@lerna/command')
 const findUp = require('find-up')
+const { isGitRepo } = require('lerna-utils-git-command')
 const { getGitInfoWithValidate } = require('lerna-utils-gpm')
 const { gitRemote, getGitSha } = require('lerna-utils-git-command')
 const { getCurrentBranch, fetch, isBehindRemote, runCommand, runGitCommand } = require('lerna-utils-git-command')
@@ -36,7 +37,6 @@ function factory(argv) {
 function importOptions(yargs) {
   const opts = {
     alias: {
-      group: 'Command Options:',
       describe: 'Alias to package.json',
       type: 'boolean'
     }
@@ -137,7 +137,7 @@ class GpmImportCommand extends Command {
   }
 
   async registerPlugins() {
-    const { plugins } = this.options
+    const { plugins = [] } = this.options
 
     for (const pluginNameOrWithOptions of plugins) {
       let pluginName = pluginNameOrWithOptions
@@ -165,7 +165,7 @@ class GpmImportCommand extends Command {
       ...this.options
     }
     this.hooks = {
-      initialize: new AsyncSeriesBailHook(['this']),
+      initialize: new AsyncSeriesBailHook(['gpmImport']),
       writeConfig: new AsyncSeriesBailHook(['writeConfig']),
       git: {
         preClone: new AsyncSeriesBailHook(['params']),
@@ -174,7 +174,6 @@ class GpmImportCommand extends Command {
     }
 
     await this.registerPlugins()
-
     await this.hooks.initialize.promise(this)
   }
 
@@ -223,6 +222,9 @@ class GpmImportCommand extends Command {
     let tmpInfo
     const packageDir = this.targetDir
     if ('file' === type) {
+      if (!(await isGitRepo(packageDir))) {
+        throw new ValidationError('ENOGIT', packageDir + ' 非 Git 仓库')
+      }
       await this.gitClone(url, packageDir)
       tmpInfo = await getGitInfo(url)
     } else {

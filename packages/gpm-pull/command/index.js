@@ -24,5 +24,5 @@ exports.builder = (yargs) => {
 }
 
 exports.handler = function handler(argv) {
-  require('..')(argv)
+  return require('..')(argv)
 }
