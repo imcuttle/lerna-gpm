@@ -16,15 +16,29 @@ const { getGitInfoWithValidate } = require('lerna-utils-gpm')
 const gpmPush = require('lerna-command-gpm-push')
 
 const writeJsonFile = require('write-json-file')
+const { pushOptions } = require('lerna-command-gpm-push')
 const { Command } = require('@lerna/command')
 const { getFilteredPackages } = require('@lerna/filter-options')
 const { ValidationError } = require('@lerna/validation-error')
 
 module.exports = factory
+module.exports.lockOptions = lockOptions
 
 function factory(argv) {
   return new GpmLockCommand(argv)
 }
+
+function lockOptions(yargs) {
+  const opts = {
+    push: {
+      group: 'Command Options:',
+      describe: '是否执行 gpm-push',
+      type: 'boolean',
+    },
+  }
+  return pushOptions(yargs.options(opts).group(Object.keys(opts), 'Lock Options:'))
+}
+
 
 class GpmLockCommand extends Command {
   static name = 'gpm-lock'
