@@ -15,7 +15,7 @@ const getGitInfoWithValidate = (exports.getGitInfoWithValidate = async (localDir
     throw new ValidationError('GIT', `fetch 远端代码失败`)
   }
 
-  if (!(await isBehindRemote(remote, branch, localDir))) {
+  if (await isBehindRemote(remote, branch, localDir)) {
     throw new ValidationError('GIT', `存在未推送至远端的 git commit`)
   }
   const gitUrl = await gitRemote(localDir, remote)

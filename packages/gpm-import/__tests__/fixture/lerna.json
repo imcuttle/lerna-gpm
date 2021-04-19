@@ -1,13 +1,5 @@
 {
-  "gpm": {
-    "a": {
-      "branch": "master",
-      "url": "",
-      "remote": "origin",
-      "checkout": ""
-    },
-    "packages/abc": {}
-  },
+  "gpm": {},
   "packages": [
     "packages/*"
   ],

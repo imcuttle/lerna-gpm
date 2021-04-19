@@ -1,5 +1,7 @@
 const cp = require('child_process')
 const { promisify } = require('util')
+const { resolve } = require('path')
+const { readFile, existsSync, statSync } = require('fs')
 
 // `git status -s`
 const runCommand = async (cmd, cwd) => {
@@ -24,7 +26,9 @@ const runGitCommand = async (gitCmd, cwd) => {
 }
 
 const hasUncommitted = (cwd) => {
-  return runGitCommand(`status -s`, cwd).then((changes) => !changes)
+  return runGitCommand(`status -s`, cwd).then((changes) => {
+    return !!changes
+  })
 }
 
 const gitRemote = (cwd, remote) => {
@@ -55,14 +59,16 @@ const fetch = (remote, branch, cwd) => {
 
 const isBehindRemote = (remote, branch, cwd) => {
   return runGitCommand(`rev-list --ancestry-path HEAD..${remote}/${branch}`, cwd).then(
-    (diff) => !!diff,
+    (diff) => {
+      return !!diff
+    },
     () => false
   )
 }
 
 const isGitRepo = (cwd) => {
   return runGitCommand(`rev-parse --is-inside-work-tree`, cwd).then(
-    () => true,
+    () => existsSync(resolve(cwd, '.git')) && statSync(resolve(cwd, '.git')).isDirectory(),
     () => false
   )
 }

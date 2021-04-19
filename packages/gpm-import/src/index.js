@@ -39,6 +39,10 @@ function importOptions(yargs) {
     alias: {
       describe: 'Alias to package.json',
       type: 'boolean'
+    },
+    name: {
+      describe: 'package name',
+      type: 'string'
     }
   }
   return yargs.options(opts).group(Object.keys(opts), 'Import Options:')
@@ -216,17 +220,20 @@ class GpmImportCommand extends Command {
 
   async execute() {
     const { rootPath } = this.project
-    const getGitInfo = async (localDir) => getGitInfoWithValidate(localDir, {remote: this.options.remote})
+    const getGitInfo = async (localDir) => getGitInfoWithValidate(localDir, { remote: this.options.remote })
 
     const { type, url } = this.repoOrGitDir
     let tmpInfo
     const packageDir = this.targetDir
+    this.logger.verbose('this.repoOrGitDir: %o', this.repoOrGitDir)
+    this.logger.verbose('packageDir: %o', packageDir)
+
     if ('file' === type) {
-      if (!(await isGitRepo(packageDir))) {
-        throw new ValidationError('ENOGIT', packageDir + ' 非 Git 仓库')
+      if (!(await isGitRepo(url))) {
+        throw new ValidationError('ENOGIT', url + ' 非 Git 仓库')
       }
       await this.gitClone(url, packageDir)
-      tmpInfo = await getGitInfo(url)
+      tmpInfo = await getGitInfo(packageDir)
     } else {
       await this.gitClone(url, packageDir)
       tmpInfo = await getGitInfo(packageDir)
@@ -246,14 +253,17 @@ class GpmImportCommand extends Command {
     )
 
     // 写 gitignore
-    const gitIgnorePath = ensureGitIgnorePath(rootPath, nps.dirname(packageDir))
+    const gitIgnorePath = ensureGitIgnorePath(nps.dirname(packageDir), rootPath)
+    this.logger.info('gitIgnore path: ' + gitIgnorePath)
     const gitIgnore = fs.readFileSync(gitIgnorePath, 'utf-8')
-    const ignoreRule = `/${nps.relative(rootPath, packageDir)}/`
+    const ignoreRule = `/${nps.relative(nps.dirname(gitIgnorePath), packageDir)}/`
     const alreadyIgnore = gitIgnore.split('\n').some((line) => {
       return line.trim() === ignoreRule
     })
     if (!alreadyIgnore) {
+      this.logger.info(`Writing gitignore.`)
       fs.writeFileSync(gitIgnorePath, [gitIgnore.trim(), ignoreRule].filter(Boolean).join('\n'))
     }
+    this.logger.info(`Import in ${nps.relative(this.execOpts.cwd, packageDir)} successfully!`)
   }
 }
