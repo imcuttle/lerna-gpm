@@ -53,6 +53,6 @@ describe('gpmLock', function () {
 
   it('has un pushed commit', function () {
     exec('cd packages/tmp && touch tmp.file && git add . && git commit -am "chore: tmp"')
-    expect(() => exec('lerna gpm-lock')).toThrowError(/具有未提交的改动/)
+    expect(() => exec('lerna gpm-lock')).toThrowError(/存在未推送至远端的 git commit/)
   })
 })
