@@ -57,6 +57,15 @@ const fetch = (remote, branch, cwd) => {
   )
 }
 
+const isAheadOfRemote = (remote, branch, cwd) => {
+  return runGitCommand(`rev-list --ancestry-path ${remote}/${branch}..HEAD`, cwd).then(
+    (diff) => {
+      return !!diff
+    },
+    () => false
+  )
+}
+
 const isBehindRemote = (remote, branch, cwd) => {
   return runGitCommand(`rev-list --ancestry-path HEAD..${remote}/${branch}`, cwd).then(
     (diff) => {
@@ -95,6 +104,7 @@ module.exports = {
   gitCommit,
   getGitSha,
   isBehindRemote,
+  isAheadOfRemote,
   gitAdd,
   runCommand
 }

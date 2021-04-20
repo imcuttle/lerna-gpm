@@ -2,7 +2,7 @@
  * gpm utils
  * @author 余聪
  */
-const { gitRemote, getGitSha, getCurrentBranch, hasUncommitted, fetch, isBehindRemote } = require('lerna-utils-git-command')
+const { gitRemote, getGitSha, getCurrentBranch, hasUncommitted, fetch, isAheadOfRemote } = require('lerna-utils-git-command')
 const { ValidationError } = require('@lerna/validation-error')
 
 const getGitInfoWithValidate = (exports.getGitInfoWithValidate = async (localDir, { remote = 'origin' } = {}) => {
@@ -15,7 +15,7 @@ const getGitInfoWithValidate = (exports.getGitInfoWithValidate = async (localDir
     throw new ValidationError('GIT', `fetch 远端代码失败`)
   }
 
-  if (await isBehindRemote(remote, branch, localDir)) {
+  if (await isAheadOfRemote(remote, branch, localDir)) {
     throw new ValidationError('GIT', `存在未推送至远端的 git commit`)
   }
   const gitUrl = await gitRemote(localDir, remote)

@@ -7,7 +7,7 @@ const nps = require('path')
 const { promisify } = require('util')
 const gpmImport = require('lerna-command-gpm-import')
 const { hasUncommitted } = require('lerna-utils-git-command')
-const { isBehindRemote } = require('lerna-utils-git-command')
+const { isBehindRemote, isAheadOfRemote } = require('lerna-utils-git-command')
 const { gitRemote, isGitRepo, getCurrentBranch, fetch, runGitCommand } = require('lerna-utils-git-command')
 
 const { Command } = require('@lerna/command')
@@ -64,7 +64,7 @@ class GpmUpdateCommand extends Command {
         throw new ValidationError('ENOGIT', `fetch 远端代码失败`)
       }
 
-      if (await isBehindRemote(remote, branch, dirPath)) {
+      if (await isAheadOfRemote(remote, branch, dirPath)) {
         throw new ValidationError('ENOGIT', `存在未推送至远端的 git commit`)
       }
 
