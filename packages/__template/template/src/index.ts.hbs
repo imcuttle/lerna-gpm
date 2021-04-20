@@ -11,6 +11,22 @@ const { getFilteredPackages } = require('@lerna/filter-options')
 const { ValidationError } = require('@lerna/validation-error')
 
 module.exports = factory
+module.exports.{{{camelCase name}}}Options = {{{camelCase name}}}Options
+
+function {{{camelCase name}}}Options(yargs) {
+  const opts = {
+    // todo
+    alias: {
+      describe: 'Alias to package.json',
+      type: 'boolean'
+    },
+    name: {
+      describe: 'package name',
+      type: 'string'
+    }
+  }
+  return yargs.options(opts).group(Object.keys(opts), '{{{pascalCase name}}} Options:')
+}
 
 function factory(argv) {
   return new {{{pascalCase name}}}Command(argv)

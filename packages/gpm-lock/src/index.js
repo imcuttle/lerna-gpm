@@ -14,10 +14,10 @@ const {
 } = require('lerna-utils-git-command')
 const { getGitInfoWithValidate } = require('lerna-utils-gpm')
 const gpmPush = require('lerna-command-gpm-push')
+const { GlobsCommand } = require('lerna-utils-globs-command')
 
 const writeJsonFile = require('write-json-file')
 const { pushOptions } = require('lerna-command-gpm-push')
-const { Command } = require('@lerna/command')
 const { getFilteredPackages } = require('@lerna/filter-options')
 const { ValidationError } = require('@lerna/validation-error')
 
@@ -40,13 +40,14 @@ function lockOptions(yargs) {
 }
 
 
-class GpmLockCommand extends Command {
+class GpmLockCommand extends GlobsCommand {
   static name = 'gpm-lock'
 
   get requiresGit() {
     return true
   }
   async initialize() {
+    super.initialize()
     this.logger.verbose('options:', this.options)
 
     this.validPackages = await getFilteredPackages(this.packageGraph, this.execOpts, {
@@ -98,7 +99,7 @@ class GpmLockCommand extends Command {
     if (!(await fetch(remote, branch, dirPath))) {
       throw new ValidationError('GIT', `fetch 远端代码失败`)
     }
-    if (!(await isBehindRemote(remote, branch, dirPath))) {
+    if (await isBehindRemote(remote, branch, dirPath)) {
       throw new ValidationError('GIT', `存在未推送至远端的 git commit`)
     }
 
@@ -112,17 +113,9 @@ class GpmLockCommand extends Command {
   }
 
   async execute() {
-    const { rootPath, rootConfigLocation, config } = this.project
-    this.logger.info('valid packages:', this.validPackages.map((pkg) => pkg.name).join(', '))
+    await super.execute()
 
-    const entries = Object.entries(config.gpm)
-    for (const [dir, config] of entries) {
-      this.logger.info('lock:', dir)
-      await this.executeEach(dir, config || {})
-      this.logger.verbose('lock done:', dir)
-    }
-
-    if (entries.length && this.options.push) {
+    if (this.executeGpmEntries.length && this.options.push) {
       return new Promise((resolve, reject) => {
         // fake promise api
         gpmPush(this.argv).then(resolve, reject)

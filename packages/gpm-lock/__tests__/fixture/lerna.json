@@ -1,7 +1,19 @@
 {
-  "packages": ["packages/*"],
-  "extendCommands": ["../.."],
-  "command": {
-  },
-  "version": "0.0.0"
+  "packages": [
+    "packages/*"
+  ],
+  "extendCommands": [
+    "../..",
+    "../../node_modules/lerna-command-gpm-import"
+  ],
+  "command": {},
+  "version": "0.0.0",
+  "gpm": {
+    "packages/tmp": {
+      "branch": "master",
+      "url": "https://github.com/imcuttle/lerna-commands.git",
+      "remote": "origin",
+      "checkout": "2ce997487986c8fcbf07e6f379adbd8367a3aaa6"
+    }
+  }
 }

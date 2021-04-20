@@ -7,7 +7,7 @@ const nps = require('path')
 const { promisify } = require('util')
 const template = require('lodash.template')
 
-const { Command } = require('@lerna/command')
+const { GlobsCommand } = require('lerna-utils-globs-command')
 const { getFilteredPackages } = require('@lerna/filter-options')
 const { ValidationError } = require('@lerna/validation-error')
 const gpmLock = require('lerna-command-gpm-lock')
@@ -23,13 +23,14 @@ function factory(argv) {
   return new GpmPullCommand(argv)
 }
 
-class GpmPullCommand extends Command {
+class GpmPullCommand extends GlobsCommand {
   static name = 'gpm-pull'
 
   get requiresGit() {
     return true
   }
   async initialize() {
+    super.initialize()
     this.logger.verbose('options:', this.options)
 
     this.validPackages = await getFilteredPackages(this.packageGraph, this.execOpts, {
@@ -38,7 +39,7 @@ class GpmPullCommand extends Command {
   }
 
   async executeEach(dir, { remote = 'origin', branch }) {
-    const { rootPath, rootConfigLocation, config } = this.project
+    const { rootPath } = this.project
     const dirPath = nps.resolve(rootPath, dir)
     if (!fs.existsSync(dirPath)) {
       throw new ValidationError('ENOFILE', dirPath + ' 文件不存在')
@@ -65,17 +66,9 @@ class GpmPullCommand extends Command {
   }
 
   async execute() {
-    const { config } = this.project
-    this.logger.info('valid packages:', this.validPackages.map((pkg) => pkg.name).join(', '))
+    await super.execute()
 
-    const entries = Object.entries(config.gpm)
-    for (const [dir, config] of entries) {
-      this.logger.info('pull:', dir)
-      await this.executeEach(dir, config || {})
-      this.logger.verbose('pull done:', dir)
-    }
-
-    if (entries.length && this.options.lock) {
+    if (this.executeGpmEntries.length && this.options.lock) {
       return new Promise((resolve, reject) => {
         // fake promise api
         gpmLock(this.argv).then(resolve, reject)

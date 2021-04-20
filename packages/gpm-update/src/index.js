@@ -64,7 +64,7 @@ class GpmUpdateCommand extends Command {
         throw new ValidationError('ENOGIT', `fetch 远端代码失败`)
       }
 
-      if (!(await isBehindRemote(remote, branch, dirPath))) {
+      if (await isBehindRemote(remote, branch, dirPath)) {
         throw new ValidationError('ENOGIT', `存在未推送至远端的 git commit`)
       }
 

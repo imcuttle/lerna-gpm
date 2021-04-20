@@ -36,6 +36,7 @@ function factory(argv) {
 
 function importOptions(yargs) {
   const opts = {
+    // todo
     alias: {
       describe: 'Alias to package.json',
       type: 'boolean'
@@ -261,9 +262,9 @@ class GpmImportCommand extends Command {
       return line.trim() === ignoreRule
     })
     if (!alreadyIgnore) {
-      this.logger.info(`Writing gitignore.`)
+      this.logger.info(`正在写 .gitignore`)
       fs.writeFileSync(gitIgnorePath, [gitIgnore.trim(), ignoreRule].filter(Boolean).join('\n'))
     }
-    this.logger.info(`Import in ${nps.relative(this.execOpts.cwd, packageDir)} successfully!`)
+    this.logger.info(`导入 ${nps.relative(this.execOpts.cwd, packageDir)} 成功!`)
   }
 }
