@@ -1,0 +1,39 @@
+{
+  "name": "lerna-command-preset-gpm",
+  "version": "0.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "余聪 <yucong@yuanfudao.com>",
+  "description": "gpm commands preset",
+  "main": "command",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "../../scripts/run test",
+    "packlimit": "../../scripts/run packlimit",
+    "dev": "npm run build -- --watch",
+    "version": "npm test && npm run packlimit"
+  },
+  "dependencies": {
+    "lerna-command-gpm-import": "^0.0.0",
+    "lerna-command-gpm-lock": "^0.0.0",
+    "lerna-command-gpm-pull": "^0.0.0",
+    "lerna-command-gpm-push": "^0.0.0",
+    "lerna-command-gpm-update": "^0.0.0"
+  },
+  "keywords": [
+    "余聪",
+    "preset-gpm",
+    "余聪",
+    "lerna",
+    "commands",
+    "lerna-commands"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imcuttle/lerna-commands.git",
+    "directory": "packages/preset-gpm"
+  }
+}
