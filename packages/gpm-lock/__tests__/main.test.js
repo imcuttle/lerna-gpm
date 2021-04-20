@@ -15,11 +15,11 @@ const exec = (cmd) => {
   }).trim()
 }
 
-beforeAll(() => {
+beforeEach(() => {
   exec('lerna gpm-import https://github.com/imcuttle/visit-tree.git --name=tmp')
 })
 
-afterAll(() => {
+afterEach(() => {
   exec('rm -rf packages/tmp')
   writeFileSync(
     fixture('lerna.json'),
@@ -34,18 +34,25 @@ afterAll(() => {
   )
 })
 
-describe('gpmLock', function() {
-  it(
-    'spec case',
-    function () {
-      const head = exec('cd packages/tmp && git rev-parse HEAD')
-      exec('lerna gpm-lock packages/tmp')
-      expect(readLernaJson().gpm['packages/tmp']).toEqual({
-        branch: 'master',
-        remote: 'origin',
-        url: 'https://github.com/imcuttle/visit-tree.git',
-        checkout: head
-      })
-    }
-  )
+describe('gpmLock', function () {
+  it('spec case', function () {
+    const head = exec('cd packages/tmp && git rev-parse HEAD')
+    exec('lerna gpm-lock')
+    expect(readLernaJson().gpm['packages/tmp']).toEqual({
+      branch: 'master',
+      remote: 'origin',
+      url: 'https://github.com/imcuttle/visit-tree.git',
+      checkout: head
+    })
+  })
+
+  it('has uncommitted', function () {
+    exec('cd packages/tmp && touch tmp.file')
+    expect(() => exec('lerna gpm-lock')).toThrowError(/具有未提交的改动/)
+  })
+
+  it('has un pushed commit', function () {
+    exec('cd packages/tmp && touch tmp.file && git add . && git commit -am "chore: tmp"')
+    expect(() => exec('lerna gpm-lock')).toThrowError(/具有未提交的改动/)
+  })
 })
