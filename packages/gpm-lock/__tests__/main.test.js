@@ -20,7 +20,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  exec('rm -rf packages/tmp')
+  // exec('rm -rf packages/tmp')
   writeFileSync(
     fixture('lerna.json'),
     JSON.stringify(

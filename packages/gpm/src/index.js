@@ -10,7 +10,7 @@ const getGitInfoWithValidate = (exports.getGitInfoWithValidate = async (localDir
     throw new ValidationError('GIT', `${localDir} 中具有未提交的改动，请先 git commit`)
   }
 
-  const branch = await getCurrentBranch()
+  const branch = await getCurrentBranch(localDir)
   if (!(await fetch(remote, branch, localDir))) {
     throw new ValidationError('GIT', `fetch 远端代码失败`)
   }
