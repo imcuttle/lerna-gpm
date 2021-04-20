@@ -234,6 +234,8 @@ class GpmImportCommand extends Command {
         throw new ValidationError('ENOGIT', url + ' 非 Git 仓库')
       }
       await this.gitClone(url, packageDir)
+      const remoteUrl = await gitRemote(url, this.options.remote || 'origin')
+      await runGitCommand(`remote set-url ${JSON.stringify(this.options.remote || 'origin')} ${JSON.stringify(remoteUrl)}`, packageDir)
       tmpInfo = await getGitInfo(packageDir)
     } else {
       await this.gitClone(url, packageDir)

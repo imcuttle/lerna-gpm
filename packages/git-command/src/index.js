@@ -32,7 +32,7 @@ const hasUncommitted = (cwd) => {
 }
 
 const gitRemote = (cwd, remote) => {
-  return runGitCommand(`config --get remote.${remote}.url`)
+  return runGitCommand(`config --get remote.${remote}.url`, cwd)
 }
 
 const getGitSha = (cwd) => {

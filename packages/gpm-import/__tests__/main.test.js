@@ -72,7 +72,7 @@ describe('gpmImport', function () {
     expect(exec('lerna gpm-import tmp')).toMatchInlineSnapshot(`""`)
     expect(readLernaJson().gpm['packages/tmp']).toMatchObject({
       branch: 'master',
-      url: 'https://github.com/imcuttle/lerna-commands.git',
+      url: 'https://github.com/imcuttle/visit-tree.git',
       remote: 'origin',
       checkout: head
     })
@@ -85,7 +85,7 @@ describe('gpmImport', function () {
     expect(exec('lerna gpm-import https://github.com/imcuttle/visit-tree.git')).toMatchInlineSnapshot(`""`)
     expect(readLernaJson().gpm['packages/visit-tree']).toMatchObject({
       branch: 'master',
-      url: 'https://github.com/imcuttle/lerna-commands.git',
+      url: 'https://github.com/imcuttle/visit-tree.git',
       remote: 'origin',
       checkout: head
     })
