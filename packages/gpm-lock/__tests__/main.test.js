@@ -40,7 +40,7 @@ describe('gpmLock', function() {
     function () {
       const head = exec('cd packages/tmp && git rev-parse HEAD')
       exec('lerna gpm-lock packages/tmp')
-      expect(readLernaJson().gpm).toMatchObject({
+      expect(readLernaJson().gpm['packages/tmp']).toEqual({
         branch: 'master',
         remote: 'origin',
         url: 'https://github.com/imcuttle/visit-tree.git',
