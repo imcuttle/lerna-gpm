@@ -59,6 +59,7 @@ class GpmLockCommand extends GlobsCommand {
   async updateLernaConfig(dir, { remote } = {}) {
     const { rootPath, rootConfigLocation, config } = this.project
     const dirPath = nps.resolve(rootPath, dir)
+    this.logger.info('dirPath', dirPath)
 
     const { gitCheckout, gitBranch, gitUrl } = await getGitInfoWithValidate(dirPath, { remote })
 

@@ -37,6 +37,26 @@ afterEach(() => {
 describe('gpmLock', function () {
   it('spec case', function () {
     const head = exec('cd packages/tmp && git rev-parse HEAD')
+
+    const lernaConfig = readLernaJson()
+    writeFileSync(
+      fixture('lerna.json'),
+      JSON.stringify(
+        {
+          ...lernaConfig,
+          gpm: {
+            ...lernaConfig.gpm,
+            'packages/tmp': {
+              ...lernaConfig.gpm['packages/tmp'],
+              checkout: null
+            }
+          }
+        },
+        null,
+        2
+      )
+    )
+
     exec('lerna gpm-lock')
     expect(readLernaJson().gpm['packages/tmp']).toEqual({
       branch: 'master',
