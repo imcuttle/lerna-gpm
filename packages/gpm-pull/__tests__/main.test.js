@@ -59,6 +59,11 @@ describe('gpmPull', function () {
 
     exec('lerna gpm-pull packages/tmp --lock')
     expect(exec('cd packages/tmp && git rev-parse HEAD')).toBe(head)
-    expect(readLernaJson().gpm['packages/tmp']).toMatchInlineSnapshot()
+    expect(readLernaJson().gpm['packages/tmp']).toEqual({
+      branch: 'master',
+      checkout: head,
+      remote: 'origin',
+      url: 'https://github.com/imcuttle/visit-tree.git'
+    })
   })
 })
