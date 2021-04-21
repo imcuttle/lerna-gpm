@@ -36,7 +36,7 @@ afterEach(() => {
 
 
 describe('gpmPush', function() {
-  it(
+  it.skip(
     'spec case',
     function () {
 

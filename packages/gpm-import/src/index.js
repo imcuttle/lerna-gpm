@@ -41,6 +41,10 @@ function importOptions(yargs) {
       describe: 'Alias to package.json',
       type: 'boolean'
     },
+    dest: {
+      describe: 'Write to which directory',
+      type: 'string'
+    },
     name: {
       describe: 'package name',
       type: 'string'
@@ -107,7 +111,7 @@ class GpmImportCommand extends Command {
     if (this.getPackageDirectories().indexOf(targetBase) === -1) {
       throw new ValidationError(
         'EDESTDIR',
-        `--dest does not match with the package directories: ${this.getPackageDirectories()}`
+        `--dest=${targetBase} does not match with the package directories: ${this.getPackageDirectories()}`
       )
     }
     return nps.resolve(this.execOpts.cwd, targetBase, externalRepoBase)

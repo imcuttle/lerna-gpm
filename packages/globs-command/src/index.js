@@ -10,11 +10,11 @@ const { isBehindRemote } = require('lerna-utils-git-command')
 function globsOptions(yargs) {
   const opts = {
     parallel: {
-      description: 'Run script with unlimited concurrency',
+      describe: 'Run script with unlimited concurrency',
       type: 'boolean'
     },
     concurrency: {
-      description: 'How many processes to use when lerna parallelizes tasks',
+      describe: 'How many processes to use when lerna parallelizes tasks',
       type: 'number'
     }
   }
