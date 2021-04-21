@@ -21,7 +21,6 @@
   },
   "ignoreChanges": [
     "**/__fixtures__/**",
-    "**/__tests__/**",
-    "**/package.json"
+    "**/__tests__/**"
   ]
 }
