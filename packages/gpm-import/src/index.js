@@ -41,6 +41,16 @@ function importOptions(yargs) {
       describe: 'Alias to package.json',
       type: 'boolean'
     },
+    // TODO https://github.com/lerna/lerna/blob/6cb8ab2d4af7ce25c812e8fb05cd04650105705f/commands/add/index.js#L106
+    'no-bootstrap': {
+      describe: 'Do not automatically chain `lerna bootstrap` after changes are made.',
+      type: 'boolean'
+    },
+    bootstrap: {
+      // proxy for --no-bootstrap
+      hidden: true,
+      type: 'boolean'
+    },
     dest: {
       describe: 'Write to which directory',
       type: 'string'
@@ -239,7 +249,10 @@ class GpmImportCommand extends Command {
       }
       await this.gitClone(url, packageDir)
       const remoteUrl = await gitRemote(url, this.options.remote || 'origin')
-      await runGitCommand(`remote set-url ${JSON.stringify(this.options.remote || 'origin')} ${JSON.stringify(remoteUrl)}`, packageDir)
+      await runGitCommand(
+        `remote set-url ${JSON.stringify(this.options.remote || 'origin')} ${JSON.stringify(remoteUrl)}`,
+        packageDir
+      )
       tmpInfo = await getGitInfo(packageDir)
     } else {
       await this.gitClone(url, packageDir)
@@ -271,6 +284,16 @@ class GpmImportCommand extends Command {
       this.logger.info(`正在写 .gitignore`)
       fs.writeFileSync(gitIgnorePath, [gitIgnore.trim(), ignoreRule].filter(Boolean).join('\n'))
     }
-    this.logger.info(`导入 ${nps.relative(this.execOpts.cwd, packageDir)} 成功!`)
+
+    // TODO
+    if (this.options.alias) {
+      // find tsconfig.json / tsconfig.base.json (like alias-hq)
+    }
+    if (this.options.bootstrap) {
+      // find tsconfig.json / tsconfig.base.json (like alias-hq)
+    }
+
+
+    this.logger.success(`导入 ${nps.relative(this.execOpts.cwd, packageDir)} 成功!`)
   }
 }
