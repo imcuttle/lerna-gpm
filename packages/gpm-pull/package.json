@@ -1,13 +1,12 @@
 {
   "name": "lerna-command-gpm-pull",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publishConfig": {
     "access": "public"
   },
   "author": "余聪 <yucong@yuanfudao.com>",
   "description": "gpm pull command",
   "main": "src",
-
   "scripts": {
     "test": "../../scripts/run test",
     "packlimit": "../../scripts/run packlimit",
@@ -17,9 +16,9 @@
   "dependencies": {
     "@lerna/filter-options": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
-    "lerna-command-gpm-lock": "^0.0.4",
-    "lerna-utils-git-command": "^0.0.4",
-    "lerna-utils-globs-command": "^0.0.4",
+    "lerna-command-gpm-lock": "^0.0.5",
+    "lerna-utils-git-command": "^0.0.5",
+    "lerna-utils-globs-command": "^0.0.5",
     "lodash.template": "^4.5.0"
   },
   "keywords": [
