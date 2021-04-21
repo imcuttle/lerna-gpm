@@ -20,9 +20,9 @@
     "@lerna/filter-options": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
     "lerna-command-gpm-push": "^0.0.3",
-    "lerna-utils-git-command": "^0.0.0",
-    "lerna-utils-globs-command": "^0.0.0",
-    "lerna-utils-gpm": "^0.0.0",
+    "lerna-utils-git-command": "^0.0.3",
+    "lerna-utils-globs-command": "^0.0.3",
+    "lerna-utils-gpm": "^0.0.3",
     "write-json-file": "^4.3.0"
   },
   "keywords": [

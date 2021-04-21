@@ -17,7 +17,7 @@
     "version": "npm test && npm run packlimit"
   },
   "dependencies": {
-    "lerna-command-gpm-import": "^0.0.0",
+    "lerna-command-gpm-import": "^0.0.3",
     "lerna-command-gpm-lock": "^0.0.3",
     "lerna-command-gpm-pull": "^0.0.3",
     "lerna-command-gpm-push": "^0.0.3",

@@ -21,8 +21,8 @@
     "@lerna/validation-error": "^4.0.0",
     "execa": "^5.0.0",
     "find-up": "^5.0.0",
-    "lerna-utils-git-command": "^0.0.1",
-    "lerna-utils-gpm": "^0.0.1",
+    "lerna-utils-git-command": "^0.0.3",
+    "lerna-utils-gpm": "^0.0.3",
     "lodash.template": "^4.5.0",
     "tapable": "^2.2.0",
     "write-json-file": "^4.3.0"

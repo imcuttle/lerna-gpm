@@ -19,8 +19,8 @@
   "dependencies": {
     "@lerna/filter-options": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
-    "lerna-utils-git-command": "^0.0.0",
-    "lerna-utils-globs-command": "^0.0.0",
+    "lerna-utils-git-command": "^0.0.3",
+    "lerna-utils-globs-command": "^0.0.3",
     "lodash.template": "^4.5.0"
   },
   "keywords": [
