@@ -10,7 +10,7 @@ const exec = (cmd) => {
 }
 
 describe('presetGpm', function() {
-  it.todo(
+  it.skip(
     'spec case',
     function () {
 
