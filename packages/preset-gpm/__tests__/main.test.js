@@ -1,4 +1,3 @@
-const presetGpm = require('../src')
 const nps = require('path')
 const { execSync } = require('child_process')
 const { fixture } = require('./helper')
@@ -11,10 +10,10 @@ const exec = (cmd) => {
 }
 
 describe('presetGpm', function() {
-  it(
-    'spec case',
-    function () {
-
-    }
-  )
+  // it(
+  //   'spec case',
+  //   function () {
+  //
+  //   }
+  // )
 })

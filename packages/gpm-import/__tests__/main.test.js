@@ -30,6 +30,7 @@ describe('gpmImport', function () {
 
       Import Options:
             --alias  Alias to package.json  [boolean]
+            --dest   Write to which directory  [string]
             --name   package name  [string]
 
       Global Options:
