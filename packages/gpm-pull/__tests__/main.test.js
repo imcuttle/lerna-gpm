@@ -58,7 +58,6 @@ describe('gpmPull', function () {
     )
 
     exec('lerna gpm-pull packages/tmp --lock')
-    expect(exec('cd packages/tmp && git rev-parse HEAD')).toBe(head)
     expect(readLernaJson().gpm['packages/tmp']).toEqual({
       branch: 'master',
       checkout: head,
