@@ -1,13 +1,12 @@
 {
   "name": "lerna-utils-gpm",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publishConfig": {
     "access": "public"
   },
   "author": "余聪 <yucong@yuanfudao.com>",
   "description": "gpm utils",
   "main": "src",
-
   "scripts": {
     "test": "../../scripts/run test",
     "packlimit": "../../scripts/run packlimit",
@@ -16,7 +15,7 @@
   },
   "dependencies": {
     "@lerna/validation-error": "^4.0.0",
-    "lerna-utils-git-command": "^0.0.4"
+    "lerna-utils-git-command": "^0.0.5"
   },
   "keywords": [
     "余聪",

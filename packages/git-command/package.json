@@ -1,13 +1,12 @@
 {
   "name": "lerna-utils-git-command",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publishConfig": {
     "access": "public"
   },
   "author": "余聪 <yucong@yuanfudao.com>",
   "description": "git command util",
   "main": "src",
-
   "scripts": {
     "packlimit": "../../scripts/run packlimit",
     "dev": "npm run build -- --watch",
