@@ -7,9 +7,6 @@
   "author": "余聪 <yucong@yuanfudao.com>",
   "description": "gpm commands preset",
   "main": "command",
-  "files": [
-    "src"
-  ],
   "scripts": {
     "test": "../../scripts/run test",
     "packlimit": "../../scripts/run packlimit",

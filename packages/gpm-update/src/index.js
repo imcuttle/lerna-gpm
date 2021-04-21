@@ -55,8 +55,8 @@ class GpmUpdateCommand extends GlobsCommand {
         gpmImport({
           ...this.argv,
           repoOrGitDir: url,
-          name: nps.basename(dirPath),
-          dest: nps.relative(rootPath, nps.dirname(dirPath)),
+          name: dir.split('/').slice(1).join('/'),
+          dest: dir.split('/').slice(0, 1).join('/'),
         }).then(resolve, reject)
       })
     }

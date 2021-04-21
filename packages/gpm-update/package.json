@@ -7,9 +7,6 @@
   "author": "余聪 <yucong@yuanfudao.com>",
   "description": "update git repo",
   "main": "src",
-  "files": [
-    "src"
-  ],
   "scripts": {
     "test": "../../scripts/run test",
     "packlimit": "../../scripts/run packlimit",

@@ -7,9 +7,7 @@
   "author": "余聪 <yucong@yuanfudao.com>",
   "description": "import git repo like git submodule",
   "main": "src",
-  "files": [
-    "src"
-  ],
+
   "scripts": {
     "test": "../../scripts/run test",
     "packlimit": "../../scripts/run packlimit",

@@ -21,7 +21,7 @@ module.exports = ({ packagePrefix, name, description, scriptBin, _, useTs }) => 
     main: 'lib',
     types: 'types',
     module: 'es',
-    files: useTs ? ['lib', 'es', 'types'] : ['src'],
+    // files: useTs ? ['lib', 'es', 'types'] : ['src'],
     scripts,
     dependencies: {},
     keywords: [_.git.name].concat(name.split('.')).concat(require('../../../package.json').keywords || []),

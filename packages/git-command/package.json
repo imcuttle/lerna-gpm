@@ -7,9 +7,7 @@
   "author": "余聪 <yucong@yuanfudao.com>",
   "description": "git command util",
   "main": "src",
-  "files": [
-    "src"
-  ],
+
   "scripts": {
     "packlimit": "../../scripts/run packlimit",
     "dev": "npm run build -- --watch",
