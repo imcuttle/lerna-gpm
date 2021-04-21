@@ -46,17 +46,22 @@ class GpmUpdateCommand extends GlobsCommand {
     return pkg
   }
 
+  getPackageDirectories() {
+    return this.project.packageConfigs.filter((p) => p.endsWith('*')).map((p) => nps.dirname(p))
+  }
+
   async executeEach(dir, { remote = 'origin', branch = 'master', checkout, url }) {
     const { rootPath, rootConfigLocation, config } = this.project
     const dirPath = nps.resolve(rootPath, dir)
     if (!fs.existsSync(dirPath)) {
+      const dest = this.getPackageDirectories().find(str => dir.startsWith(str))
       await new Promise((resolve, reject) => {
         // fake promise api
         gpmImport({
           ...this.argv,
           repoOrGitDir: url,
-          name: dir.split('/').slice(1).join('/'),
-          dest: dir.split('/').slice(0, 1).join('/'),
+          name: dir.slice(dest.length).replace(/^\//, ''),
+          dest: dest,
         }).then(resolve, reject)
       })
     }
