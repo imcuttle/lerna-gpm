@@ -4,13 +4,28 @@
  */
 const { Command } = require('@lerna/command')
 const nps = require('path')
+const pLimit = require('p-limit')
 const { isBehindRemote } = require('lerna-utils-git-command')
 
 function globsOptions(yargs) {
-  return yargs.positional('globs', {
-    describe: 'Optional package directory globs to match',
-    type: 'array'
-  })
+  const opts = {
+    parallel: {
+      description: 'Run script with unlimited concurrency',
+      type: 'boolean'
+    },
+    concurrency: {
+      description: 'How many processes to use when lerna parallelizes tasks',
+      type: 'number'
+    }
+  }
+
+  return yargs
+    .positional('globs', {
+      describe: 'Optional package directory globs to match',
+      type: 'array'
+    })
+    .options()
+    .group(Object.keys(opts), 'Run Options:')
 }
 
 class GlobsCommand extends Command {
@@ -46,12 +61,33 @@ class GlobsCommand extends Command {
     this.executeGpmEntries = Object.entries(config.gpm).filter(([dir, config]) => {
       return this.findPackage(dir)
     })
+
+    let limit
+    if (this.options.parallel) {
+      limit = pLimit(Infinity)
+    } else if (this.options.concurrency) {
+      limit = pLimit(this.options.concurrency)
+    } else {
+      limit = pLimit(1)
+    }
+
+    const tasks = []
     for (const [dir, config] of this.executeGpmEntries) {
-      this.logger.info(`Run ${this.constructor.name} in ${this.findPackage(dir).name}`)
-      if (await isBehindRemote(config.remote || 'origin', config.branch, nps.resolve(rootPath, dir))) {
-        this.logger.warn(`${dir} 滞后于远端，请及时执行 lerna gpm-pull ${dir} 进行同步`)
-      }
-      await this.executeEach(dir, config || {}, this.executeGpmEntries)
+      tasks.push(
+        limit(async () => {
+          this.logger.info(`Run ${this.constructor.name} in ${this.findPackage(dir).name}`)
+          if (await isBehindRemote(config.remote || 'origin', config.branch, nps.resolve(rootPath, dir))) {
+            this.logger.warn(`${dir} 滞后于远端，请及时执行 lerna gpm-pull ${dir} 进行同步`)
+          }
+          await this.executeEach(dir, config || {}, this.executeGpmEntries)
+        })
+      )
+    }
+
+    await Promise.all(tasks)
+
+    if (this.executeGpmEntries.length) {
+      this.logger.success(`Run ${this.constructor.name} ${this.executeGpmEntries.length} packages`)
     }
   }
 }

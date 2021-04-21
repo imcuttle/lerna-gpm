@@ -66,7 +66,7 @@
     "human-format": "^0.11.0",
     "husky": "^6.0.0",
     "jest": "^26.6.3",
-    "lerna-cli": "^4.0.0",
+    "lerna-cli": "^4.1.0",
     "lerna-command-toc": "^1.0.1",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0"

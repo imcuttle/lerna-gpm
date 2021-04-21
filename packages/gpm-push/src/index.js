@@ -7,9 +7,9 @@ const nps = require('path')
 const { promisify } = require('util')
 const template = require('lodash.template')
 
-const { Command } = require('@lerna/command')
 const { getFilteredPackages } = require('@lerna/filter-options')
 const { ValidationError } = require('@lerna/validation-error')
+const { GlobsCommand } = require('lerna-utils-globs-command')
 const { runCommand, isGitRepo, hasUncommitted } = require('lerna-utils-git-command')
 
 module.exports = factory
@@ -25,19 +25,20 @@ function pushOptions(yargs) {
       group: 'Command Options:',
       describe: 'Git Push Command Template',
       type: 'string',
-      default: 'git push ${remote} HEAD:refs/for/${branch}'
+      default: 'git push ${remote} ${branch}'
     }
   }
   return yargs.options(opts).group(Object.keys(opts), 'Push Options:')
 }
 
-class GpmPushCommand extends Command {
+class GpmPushCommand extends GlobsCommand {
   static name = 'gpm-push';
 
   get requiresGit() {
     return true
   }
   async initialize() {
+    super.initialize()
     this.logger.verbose('options:', this.options)
 
     this.validPackages = await getFilteredPackages(this.packageGraph, this.execOpts, {
@@ -59,16 +60,17 @@ class GpmPushCommand extends Command {
       }
 
       await runCommand(
-        template(this.options.gitPushCommand || 'git push ${remote} HEAD:refs/for/${branch}')({
+        template(this.options.gitPushCommand || 'git push ${remote} ${branch}')({
           branch,
           remote
-        })
+        }),
+        dirPath
       )
     }
   }
 
   async execute() {
-    this.logger.info('valid packages:', this.validPackages.map((pkg) => pkg.name).join(', '))
+    super.execute()
 
     for (const [dir, config] of Object.entries(config.gpm)) {
       this.logger.info('push:', dir)

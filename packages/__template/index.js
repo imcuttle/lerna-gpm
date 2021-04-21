@@ -57,8 +57,9 @@ module.exports = (edam) => {
         hooks: {
           'post': [
             `npx lerna add @lerna/filter-options --scope=${JSON.stringify(packagePrefix + name)}`,
-            `npx lerna add @lerna/command --scope=${JSON.stringify(packagePrefix + name)}`,
+            `npx lerna add lerna-utils-globs-command --scope=${JSON.stringify(packagePrefix + name)}`,
             `npx lerna add @lerna/validation-error --scope=${JSON.stringify(packagePrefix + name)}`
+            `npx lerna add lerna-command-preset-gpm --dev --scope=${JSON.stringify(packagePrefix + name)}`
           ]
         }
       }

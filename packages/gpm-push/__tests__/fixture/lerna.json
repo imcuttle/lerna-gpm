@@ -1,6 +1,6 @@
 {
   "packages": ["packages/*"],
-  "extendCommands": ["../.."],
+  "extendCommands": ["../../lerna-command-preset-gpm"],
   "command": {
   },
   "version": "0.0.0"
