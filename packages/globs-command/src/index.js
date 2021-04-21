@@ -24,7 +24,7 @@ function globsOptions(yargs) {
       describe: 'Optional package directory globs to match',
       type: 'array'
     })
-    .options()
+    .options(opts)
     .group(Object.keys(opts), 'Run Options:')
 }
 
