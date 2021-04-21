@@ -35,15 +35,20 @@ class GlobsCommand extends Command {
     throw new Error('executeEach need implement')
   }
 
+  findPackage(dir) {
+    const { config, rootPath } = this.project
+    return this.validPackages.find((pkg) => pkg.location === nps.resolve(rootPath, dir))
+  }
+
   async execute() {
     const { config, rootPath } = this.project
     this.logger.info('valid packages:', this.validPackages.map((pkg) => pkg.name).join(', '))
 
     this.executeGpmEntries = Object.entries(config.gpm).filter(([dir, config]) => {
-      return this.validPackages.find((pkg) => pkg.location === nps.resolve(rootPath, dir))
+      return this.findPackage(dir)
     })
     for (const [dir, config] of this.executeGpmEntries) {
-      this.logger.info(`Run ${this.constructor.name} in ${dir}`)
+      this.logger.info(`Run ${this.constructor.name} in ${this.findPackage(dir).name}`)
       if (await isBehindRemote(config.remote || 'origin', config.branch, nps.resolve(rootPath, dir))) {
         this.logger.warn(`${dir} 滞后于远端，请及时执行 lerna gpm-pull ${dir} 进行同步`)
       }
