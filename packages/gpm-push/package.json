@@ -1,6 +1,6 @@
 {
   "name": "lerna-command-gpm-push",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publishConfig": {
     "access": "public"
   },
@@ -37,6 +37,6 @@
     "directory": "packages/gpm-push"
   },
   "devDependencies": {
-    "lerna-command-preset-gpm": "^0.0.2"
+    "lerna-command-preset-gpm": "^0.0.3"
   }
 }
