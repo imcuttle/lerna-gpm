@@ -43,12 +43,11 @@ class GlobsCommand extends Command {
       return this.validPackages.find((pkg) => pkg.location === nps.resolve(rootPath, dir))
     })
     for (const [dir, config] of this.executeGpmEntries) {
-      this.logger.info('exec package:', dir)
+      this.logger.info(`Run ${this.constructor.name} in ${dir}`)
       if (await isBehindRemote(config.remote || 'origin', config.branch, nps.resolve(rootPath, dir))) {
         this.logger.warn(`${dir} 滞后于远端，请及时执行 lerna gpm-pull ${dir} 进行同步`)
       }
       await this.executeEach(dir, config || {}, this.executeGpmEntries)
-      this.logger.info('exec package done:', dir)
     }
   }
 }
