@@ -42,7 +42,6 @@ class GlobsCommand extends Command {
 
   async execute() {
     const { config, rootPath } = this.project
-    this.logger.info('valid packages:', this.validPackages.map((pkg) => pkg.name).join(', '))
 
     this.executeGpmEntries = Object.entries(config.gpm).filter(([dir, config]) => {
       return this.findPackage(dir)
