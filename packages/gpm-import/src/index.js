@@ -322,7 +322,7 @@ class GpmImportCommand extends Command {
           const basePath = nps.resolve(nps.dirname(tsconfigFile), baseUrl)
 
           tsConfig.compilerOptions.paths = {
-            [name]: ['./' + nps.relative(basePath, packageDir)],
+            [`${name}/*`]: ['./' + nps.join(nps.relative(basePath, packageDir), '*')],
             ...paths
           }
 
