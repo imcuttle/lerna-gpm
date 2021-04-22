@@ -8,5 +8,12 @@
   ],
   "command": {},
   "version": "0.0.0",
-  "gpm": {}
+  "gpm": {
+    "packages/tmp": {
+      "branch": "master",
+      "url": "https://github.com/imcuttle/visit-tree.git",
+      "remote": "origin",
+      "checkout": null
+    }
+  }
 }

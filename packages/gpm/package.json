@@ -1,6 +1,6 @@
 {
   "name": "lerna-utils-gpm",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "publishConfig": {
     "access": "public"
   },
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@lerna/validation-error": "^4.0.0",
-    "lerna-utils-git-command": "^0.0.6"
+    "lerna-utils-git-command": "^0.0.7"
   },
   "keywords": [
     "余聪",
