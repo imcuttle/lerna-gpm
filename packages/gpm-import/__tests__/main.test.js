@@ -82,7 +82,7 @@ describe('gpmImport', function () {
       checkout: head
     })
     expect(readFileSync(fixture('.gitignore')).toString()).toMatchInlineSnapshot(`"/packages/tmp/"`)
-    expect(statSync(fixture('packages/tmp/node_modules')).isDirectory()).toBeTruthy()
+    // expect(statSync(fixture('packages/tmp/node_modules')).isDirectory()).toBeTruthy()
     // expect(JSON.parse(String(readFileSync(fixture('tsconfig.json'))))).toEqual({
     //   compilerOptions: { baseUrl: '.', paths: { '@moyuyc/visit-tree': ['./packages/tmp'] } }
     // })
