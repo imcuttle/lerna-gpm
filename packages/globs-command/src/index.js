@@ -29,6 +29,10 @@ function globsOptions(yargs) {
 }
 
 class GlobsCommand extends Command {
+  get checkBehindRemote() {
+    return true
+  }
+
   initialize() {
     const { globs = [] } = this.options
     this.dirs = new Set(globs.map((fp) => nps.resolve(this.project.rootPath, fp)))
@@ -77,7 +81,7 @@ class GlobsCommand extends Command {
         limit(async () => {
           const pkgName = this.findPackage(dir).name
           this.logger.info(`Run ${this.constructor.name} in ${pkgName}`)
-          if (await isBehindRemote(config.remote || 'origin', config.branch, nps.resolve(rootPath, dir))) {
+          if (this.checkBehindRemote && await isBehindRemote(config.remote || 'origin', config.branch, nps.resolve(rootPath, dir))) {
             this.logger.warn(`${pkgName} 滞后于远端，请及时执行 lerna gpm-pull ${dir} 进行同步`)
           }
           await this.executeEach(dir, config || {}, this.executeGpmEntries)

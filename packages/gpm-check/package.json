@@ -1,12 +1,12 @@
 {
-  "name": "lerna-command-preset-gpm",
-  "version": "0.0.6",
+  "name": "lerna-command-gpm-check",
+  "version": "0.0.0",
   "publishConfig": {
     "access": "public"
   },
   "author": "余聪 <yucong@yuanfudao.com>",
-  "description": "gpm commands preset",
-  "main": "command",
+  "description": "gpm check command",
+  "main": "src",
   "scripts": {
     "test": "../../scripts/run test",
     "packlimit": "../../scripts/run packlimit",
@@ -14,16 +14,14 @@
     "version": "npm test && npm run packlimit"
   },
   "dependencies": {
-    "lerna-command-gpm-check": "^0.0.0",
-    "lerna-command-gpm-import": "^0.0.6",
-    "lerna-command-gpm-lock": "^0.0.6",
-    "lerna-command-gpm-pull": "^0.0.6",
-    "lerna-command-gpm-push": "^0.0.6",
-    "lerna-command-gpm-update": "^0.0.6"
+    "@lerna/filter-options": "^4.0.0",
+    "@lerna/validation-error": "^4.0.0",
+    "lerna-utils-git-command": "^0.0.6",
+    "lerna-utils-globs-command": "^0.0.6"
   },
   "keywords": [
     "余聪",
-    "preset-gpm",
+    "gpm-check",
     "余聪",
     "lerna",
     "commands",
@@ -32,6 +30,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/imcuttle/lerna-commands.git",
-    "directory": "packages/preset-gpm"
+    "directory": "packages/gpm-check"
+  },
+  "devDependencies": {
+    "lerna-command-preset-gpm": "^0.0.6"
   }
 }
