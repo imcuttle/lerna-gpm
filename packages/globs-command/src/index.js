@@ -75,9 +75,10 @@ class GlobsCommand extends Command {
     for (const [dir, config] of this.executeGpmEntries) {
       tasks.push(
         limit(async () => {
-          this.logger.info(`Run ${this.constructor.name} in ${this.findPackage(dir).name}`)
+          const pkgName = this.findPackage(dir).name
+          this.logger.info(`Run ${this.constructor.name} in ${pkgName}`)
           if (await isBehindRemote(config.remote || 'origin', config.branch, nps.resolve(rootPath, dir))) {
-            this.logger.warn(`${dir} 滞后于远端，请及时执行 lerna gpm-pull ${dir} 进行同步`)
+            this.logger.warn(`${pkgName} 滞后于远端，请及时执行 lerna gpm-pull ${dir} 进行同步`)
           }
           await this.executeEach(dir, config || {}, this.executeGpmEntries)
         })

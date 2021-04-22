@@ -1,6 +1,6 @@
 {
   "name": "lerna-command-gpm-update",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "publishConfig": {
     "access": "public"
   },
@@ -16,9 +16,9 @@
   "dependencies": {
     "@lerna/filter-options": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
-    "lerna-command-gpm-import": "^0.0.5",
-    "lerna-utils-git-command": "^0.0.5",
-    "lerna-utils-globs-command": "^0.0.5"
+    "lerna-command-gpm-import": "^0.0.6",
+    "lerna-utils-git-command": "^0.0.6",
+    "lerna-utils-globs-command": "^0.0.6"
   },
   "keywords": [
     "余聪",

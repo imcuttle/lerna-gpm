@@ -1,6 +1,6 @@
 {
   "name": "lerna-command-gpm-push",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "publishConfig": {
     "access": "public"
   },
@@ -16,8 +16,8 @@
   "dependencies": {
     "@lerna/filter-options": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
-    "lerna-utils-git-command": "^0.0.5",
-    "lerna-utils-globs-command": "^0.0.5",
+    "lerna-utils-git-command": "^0.0.6",
+    "lerna-utils-globs-command": "^0.0.6",
     "lodash.template": "^4.5.0"
   },
   "keywords": [
@@ -34,6 +34,6 @@
     "directory": "packages/gpm-push"
   },
   "devDependencies": {
-    "lerna-command-preset-gpm": "^0.0.5"
+    "lerna-command-preset-gpm": "^0.0.6"
   }
 }
