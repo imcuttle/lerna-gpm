@@ -17,8 +17,8 @@
     "@lerna/filter-options": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
     "lerna-command-gpm-lock": "^0.0.8",
-    "lerna-utils-git-command": "^0.0.6",
-    "lerna-utils-globs-command": "^0.0.6",
+    "lerna-utils-git-command": "^0.0.8",
+    "lerna-utils-globs-command": "^0.0.8",
     "lodash.template": "^4.5.0"
   },
   "keywords": [
@@ -35,6 +35,6 @@
     "directory": "packages/gpm-pull"
   },
   "devDependencies": {
-    "lerna-command-gpm-import": "^0.0.6"
+    "lerna-command-gpm-import": "^0.0.8"
   }
 }

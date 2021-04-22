@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "lerna-command-gpm-check": "^0.0.8",
-    "lerna-command-gpm-import": "^0.0.6",
+    "lerna-command-gpm-import": "^0.0.8",
     "lerna-command-gpm-lock": "^0.0.8",
     "lerna-command-gpm-pull": "^0.0.8",
     "lerna-command-gpm-push": "^0.0.8",
