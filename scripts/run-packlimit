@@ -49,7 +49,7 @@ try {
     const { packageSize, unpackedSize, totalFiles } = parseLog(stderr)
 
     const limitBytes = humanFormat.parse(program.opts().limit)
-    const unpackedSizeBytes = humanFormat.parse(unpackedSize)
+    const unpackedSizeBytes = humanFormat.parse(unpackedSize || '1kb')
 
     // console.error(unpackedSizeBytes, limitBytes)
     if (unpackedSizeBytes > limitBytes) {
