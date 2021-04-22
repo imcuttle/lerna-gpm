@@ -291,47 +291,53 @@ class GpmImportCommand extends Command {
       fs.writeFileSync(gitIgnorePath, [gitIgnore.trim(), ignoreRule].filter(Boolean).join('\n'))
     }
 
-    // TODO
     if (this.options.alias !== false) {
-      const files = ['jsconfig.json', 'tsconfig.base.json', 'tsconfig.json']
-      const tsName = files.find(
-        (name) => fs.existsSync(nps.join(rootPath, name)) && fs.statSync(nps.join(rootPath, name)).isFile()
-      )
-
-      // find tsconfig.json / tsconfig.base.json (like alias-hq)
-      if (tsName) {
-        const tsconfigFile = nps.join(rootPath, tsName)
-        const tsConfig = JSON5.parse(await promisify(fs.readFile)(tsconfigFile, 'utf8'))
-
-        if (tsConfig) {
-          tsConfig.compilerOptions = tsConfig.compilerOptions || {}
-
-          let name = this.externalRepoBasename
-          if (fs.existsSync(nps.join(packageDir, 'package.json'))) {
-            name = require(nps.join(packageDir, 'package.json')).name || name
-          }
-
-          this.logger.info(`Alias in ${name} in ${tsName}`)
-
-          tsConfig.compilerOptions = {
-            baseUrl: '.',
-            ...tsConfig.compilerOptions
-          }
-
-          const { baseUrl, paths } = tsConfig.compilerOptions
-          const basePath = nps.resolve(nps.dirname(tsconfigFile), baseUrl)
-
-          tsConfig.compilerOptions.paths = {
-            [`${name}/*`]: ['./' + nps.join(nps.relative(basePath, packageDir), '*')],
-            ...paths
-          }
-
-          await writeJsonFile(tsconfigFile, tsConfig, {
-            indent: 2,
-            detectIndent: true
-          })
-        }
+      this.logger.info('Aliasing')
+      const result = execa.commandSync(`npm install ${packageDir}`, { stdin: 'ignore', stdout: 'ignore', stderr: 'ignore', cwd: rootPath, reject: false })
+      if (result.stderr) {
+        this.logger.error(result.stderr)
       }
+
+      // const files = ['jsconfig.json', 'tsconfig.base.json', 'tsconfig.json']
+      // const tsName = files.find(
+      //   (name) => fs.existsSync(nps.join(rootPath, name)) && fs.statSync(nps.join(rootPath, name)).isFile()
+      // )
+      //
+      // // find tsconfig.json / tsconfig.base.json (like alias-hq)
+      // if (tsName) {
+      //   const tsconfigFile = nps.join(rootPath, tsName)
+      //   const tsConfig = JSON5.parse(await promisify(fs.readFile)(tsconfigFile, 'utf8'))
+      //
+      //   if (tsConfig) {
+      //     tsConfig.compilerOptions = tsConfig.compilerOptions || {}
+      //
+      //     let name = this.externalRepoBasename
+      //     if (fs.existsSync(nps.join(packageDir, 'package.json'))) {
+      //       name = require(nps.join(packageDir, 'package.json')).name || name
+      //     }
+      //
+      //     this.logger.info(`Alias in ${name} in ${tsName}`)
+      //
+      //     tsConfig.compilerOptions = {
+      //       baseUrl: '.',
+      //       ...tsConfig.compilerOptions
+      //     }
+      //
+      //     const { baseUrl, paths } = tsConfig.compilerOptions
+      //     const basePath = nps.resolve(nps.dirname(tsconfigFile), baseUrl)
+      //
+      //     tsConfig.compilerOptions.paths = {
+      //       [`${name}`]: ['./' + nps.join(nps.relative(basePath, packageDir))],
+      //       [`${name}/*`]: ['./' + nps.join(nps.relative(basePath, packageDir), '*')],
+      //       ...paths
+      //     }
+      //
+      //     await writeJsonFile(tsconfigFile, tsConfig, {
+      //       indent: 2,
+      //       detectIndent: true
+      //     })
+      //   }
+      // }
     }
     if (this.options.bootstrap !== false) {
       const argv = Object.assign({}, this.options, {

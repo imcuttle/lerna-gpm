@@ -73,7 +73,7 @@ describe('gpmImport', function () {
     execPure('git clone https://github.com/imcuttle/visit-tree.git tmp')
     const head = execPure('cd tmp && git rev-parse HEAD')
 
-    execPure('echo {} > tsconfig.json')
+    // execPure('echo {} > tsconfig.json')
     expect(exec('lerna gpm-import tmp')).toMatchInlineSnapshot(`""`)
     expect(readLernaJson().gpm['packages/tmp']).toMatchObject({
       branch: 'master',
@@ -83,9 +83,9 @@ describe('gpmImport', function () {
     })
     expect(readFileSync(fixture('.gitignore')).toString()).toMatchInlineSnapshot(`"/packages/tmp/"`)
     expect(statSync(fixture('packages/tmp/node_modules')).isDirectory()).toBeTruthy()
-    expect(JSON.parse(String(readFileSync(fixture('tsconfig.json'))))).toEqual({
-      compilerOptions: { baseUrl: '.', paths: { '@moyuyc/visit-tree': ['./packages/tmp'] } }
-    })
+    // expect(JSON.parse(String(readFileSync(fixture('tsconfig.json'))))).toEqual({
+    //   compilerOptions: { baseUrl: '.', paths: { '@moyuyc/visit-tree': ['./packages/tmp'] } }
+    // })
   })
 
   it('import valid git dir --no-bootstrap', function () {
@@ -94,18 +94,18 @@ describe('gpmImport', function () {
     expect(existsSync(fixture('packages/tmp/node_modules'))).toBeFalsy()
   })
 
-  it('import valid git repo', function () {
-    execPure('git clone https://github.com/imcuttle/visit-tree.git tmp')
-    const head = execPure('cd tmp && git rev-parse HEAD')
-    expect(exec('lerna gpm-import https://github.com/imcuttle/visit-tree.git')).toMatchInlineSnapshot(`""`)
-    expect(readLernaJson().gpm['packages/visit-tree']).toMatchObject({
-      branch: 'master',
-      url: 'https://github.com/imcuttle/visit-tree.git',
-      remote: 'origin',
-      checkout: head
-    })
-    expect(readFileSync(fixture('.gitignore')).toString()).toMatchInlineSnapshot(`"/packages/visit-tree/"`)
-  })
+  // it('import valid git repo', function () {
+  //   execPure('git clone https://github.com/imcuttle/visit-tree.git tmp')
+  //   const head = execPure('cd tmp && git rev-parse HEAD')
+  //   expect(exec('lerna gpm-import https://github.com/imcuttle/visit-tree.git')).toMatchInlineSnapshot(`""`)
+  //   expect(readLernaJson().gpm['packages/visit-tree']).toMatchObject({
+  //     branch: 'master',
+  //     url: 'https://github.com/imcuttle/visit-tree.git',
+  //     remote: 'origin',
+  //     checkout: head
+  //   })
+  //   expect(readFileSync(fixture('.gitignore')).toString()).toMatchInlineSnapshot(`"/packages/visit-tree/"`)
+  // })
   it('import valid git repo with --name', function () {
     execPure('git clone https://github.com/imcuttle/visit-tree.git tmp')
     const head = execPure('cd tmp && git rev-parse HEAD')

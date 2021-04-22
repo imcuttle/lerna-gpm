@@ -1,6 +1,8 @@
 {
   "name": "root",
   "private": true,
-  "devDependencies": {
+  "devDependencies": {},
+  "dependencies": {
+    "@moyuyc/visit-tree": "file:packages/tmp"
   }
 }
