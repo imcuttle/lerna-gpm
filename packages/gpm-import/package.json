@@ -1,6 +1,6 @@
 {
   "name": "lerna-command-gpm-import",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "publishConfig": {
     "access": "public"
   },
@@ -20,8 +20,8 @@
     "execa": "^5.0.0",
     "find-up": "^5.0.0",
     "json5": "^2.2.0",
-    "lerna-utils-git-command": "^0.0.7",
-    "lerna-utils-gpm": "^0.0.7",
+    "lerna-utils-git-command": "^0.0.8",
+    "lerna-utils-gpm": "^0.0.8",
     "lodash.template": "^4.5.0",
     "tapable": "^2.2.0",
     "write-json-file": "^4.3.0"
