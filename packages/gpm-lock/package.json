@@ -1,6 +1,6 @@
 {
   "name": "lerna-command-gpm-lock",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "publishConfig": {
     "access": "public"
   },
@@ -16,7 +16,7 @@
   "dependencies": {
     "@lerna/filter-options": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
-    "lerna-command-gpm-push": "^0.0.8",
+    "lerna-command-gpm-push": "^0.0.9",
     "lerna-utils-git-command": "^0.0.8",
     "lerna-utils-globs-command": "^0.0.8",
     "lerna-utils-gpm": "^0.0.8",
