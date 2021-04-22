@@ -74,7 +74,7 @@ describe('gpmImport', function () {
     const head = execPure('cd tmp && git rev-parse HEAD')
 
     // execPure('echo {} > tsconfig.json')
-    expect(exec('lerna gpm-import tmp')).toMatchInlineSnapshot(`""`)
+    exec('lerna gpm-import tmp')
     expect(readLernaJson().gpm['packages/tmp']).toMatchObject({
       branch: 'master',
       url: 'https://github.com/imcuttle/visit-tree.git',
@@ -109,7 +109,7 @@ describe('gpmImport', function () {
   it('import valid git repo with --name', function () {
     execPure('git clone https://github.com/imcuttle/visit-tree.git tmp')
     const head = execPure('cd tmp && git rev-parse HEAD')
-    expect(exec('lerna gpm-import --name tmp https://github.com/imcuttle/visit-tree.git')).toMatchInlineSnapshot(`""`)
+    exec('lerna gpm-import --name tmp https://github.com/imcuttle/visit-tree.git')
     expect(readFileSync(fixture('.gitignore')).toString()).toMatchInlineSnapshot(`"/packages/tmp/"`)
   })
 })
