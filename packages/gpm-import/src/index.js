@@ -5,6 +5,8 @@
 
 const nps = require('path')
 const fs = require('fs')
+const { promisify } = require('util')
+const JSON5 = require('json5')
 const execa = require('execa')
 const template = require('lodash.template')
 const writeJsonFile = require('write-json-file')
@@ -22,6 +24,7 @@ const {
 const { Command } = require('@lerna/command')
 const findUp = require('find-up')
 const { isGitRepo } = require('lerna-utils-git-command')
+const bootstrap = require('@lerna/bootstrap')
 const { getGitInfoWithValidate } = require('lerna-utils-gpm')
 const { gitRemote, getGitSha } = require('lerna-utils-git-command')
 const { getCurrentBranch, fetch, isBehindRemote, runCommand, runGitCommand } = require('lerna-utils-git-command')
@@ -38,10 +41,13 @@ function importOptions(yargs) {
   const opts = {
     // todo
     alias: {
-      describe: 'Alias to package.json',
+      type: 'boolean',
+      hidden: true
+    },
+    'no-alias': {
+      describe: 'Do not alias to package.json in tsconfig.json',
       type: 'boolean'
     },
-    // TODO https://github.com/lerna/lerna/blob/6cb8ab2d4af7ce25c812e8fb05cd04650105705f/commands/add/index.js#L106
     'no-bootstrap': {
       describe: 'Do not automatically chain `lerna bootstrap` after changes are made.',
       type: 'boolean'
@@ -286,13 +292,67 @@ class GpmImportCommand extends Command {
     }
 
     // TODO
-    if (this.options.alias) {
-      // find tsconfig.json / tsconfig.base.json (like alias-hq)
-    }
-    if (this.options.bootstrap) {
-      // find tsconfig.json / tsconfig.base.json (like alias-hq)
-    }
+    if (this.options.alias !== false) {
+      const files = ['jsconfig.json', 'tsconfig.base.json', 'tsconfig.json']
+      const tsName = files.find(
+        (name) => fs.existsSync(nps.join(rootPath, name)) && fs.statSync(nps.join(rootPath, name)).isFile()
+      )
 
+      // find tsconfig.json / tsconfig.base.json (like alias-hq)
+      if (tsName) {
+        const tsconfigFile = nps.join(rootPath, tsName)
+        const tsConfig = JSON5.parse(await promisify(fs.readFile)(tsconfigFile, 'utf8'))
+
+        if (tsConfig) {
+          tsConfig.compilerOptions = tsConfig.compilerOptions || {}
+
+          let name = this.externalRepoBasename
+          if (fs.existsSync(nps.join(packageDir, 'package.json'))) {
+            name = require(nps.join(packageDir, 'package.json')).name || name
+          }
+
+          this.logger.info(`Alias in ${name} in ${tsName}`)
+
+          tsConfig.compilerOptions = {
+            baseUrl: '.',
+            ...tsConfig.compilerOptions
+          }
+
+          const { baseUrl, paths } = tsConfig.compilerOptions
+          const basePath = nps.resolve(nps.dirname(tsconfigFile), baseUrl)
+
+          tsConfig.compilerOptions.paths = {
+            [name]: ['./' + nps.relative(basePath, packageDir)],
+            ...paths
+          }
+
+          await writeJsonFile(tsconfigFile, tsConfig, {
+            indent: 2,
+            detectIndent: true
+          })
+        }
+      }
+    }
+    if (this.options.bootstrap !== false) {
+      const argv = Object.assign({}, this.options, {
+        args: [],
+        cwd: this.project.rootPath,
+        // silence initial cli version logging, etc
+        composed: 'add',
+        // NEVER pass filter-options, it is very bad
+        scope: undefined,
+        ignore: undefined,
+        private: undefined,
+        since: undefined,
+        excludeDependents: undefined,
+        includeDependents: undefined,
+        includeDependencies: undefined
+      })
+
+      return new Promise((resolve, reject) => {
+        bootstrap(argv).then(resolve, reject)
+      })
+    }
 
     this.logger.success(`导入 ${nps.relative(this.execOpts.cwd, packageDir)} 成功!`)
   }

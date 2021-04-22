@@ -2,7 +2,7 @@ const gpmImport = require('../src')
 const nps = require('path')
 const { execSync } = require('child_process')
 const { fixture } = require('./helper')
-const { readFileSync, writeFileSync } = require('fs')
+const { existsSync, statSync, readFileSync, writeFileSync } = require('fs')
 
 const readLernaJson = () => {
   return JSON.parse(readFileSync(fixture('lerna.json')).toString())
@@ -29,9 +29,10 @@ describe('gpmImport', function () {
         repo-or-git-dir  The path or remote url to an external git repository that contains an npm package  [required]
 
       Import Options:
-            --alias  Alias to package.json  [boolean]
-            --dest   Write to which directory  [string]
-            --name   package name  [string]
+            --no-alias      Do not alias to package.json in tsconfig.json  [boolean]
+            --no-bootstrap  Do not automatically chain \`lerna bootstrap\` after changes are made.  [boolean]
+            --dest          Write to which directory  [string]
+            --name          package name  [string]
 
       Global Options:
             --loglevel       What level of logs to report.  [string] [default: info]
@@ -62,6 +63,7 @@ describe('gpmImport', function () {
     execPure('rm -rf packages/tmp')
     execPure('rm -rf packages/visit-tree')
     execPure('rm -rf .gitignore')
+    execPure('rm -rf tsconfig.json')
   })
   it('import invalid git dir', function () {
     execPure('mkdir -p tmp/')
@@ -70,6 +72,8 @@ describe('gpmImport', function () {
   it('import valid git dir', function () {
     execPure('git clone https://github.com/imcuttle/visit-tree.git tmp')
     const head = execPure('cd tmp && git rev-parse HEAD')
+
+    execPure('echo {} > tsconfig.json')
     expect(exec('lerna gpm-import tmp')).toMatchInlineSnapshot(`""`)
     expect(readLernaJson().gpm['packages/tmp']).toMatchObject({
       branch: 'master',
@@ -78,6 +82,16 @@ describe('gpmImport', function () {
       checkout: head
     })
     expect(readFileSync(fixture('.gitignore')).toString()).toMatchInlineSnapshot(`"/packages/tmp/"`)
+    expect(statSync(fixture('packages/tmp/node_modules')).isDirectory()).toBeTruthy()
+    expect(JSON.parse(String(readFileSync(fixture('tsconfig.json'))))).toEqual({
+      compilerOptions: { baseUrl: '.', paths: { '@moyuyc/visit-tree': ['./packages/tmp'] } }
+    })
+  })
+
+  it('import valid git dir --no-bootstrap', function () {
+    execPure('git clone https://github.com/imcuttle/visit-tree.git tmp')
+    exec('lerna gpm-import --no-bootstrap tmp')
+    expect(existsSync(fixture('packages/tmp/node_modules'))).toBeFalsy()
   })
 
   it('import valid git repo', function () {

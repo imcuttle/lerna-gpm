@@ -36,6 +36,6 @@
     "directory": "packages/gpm-lock"
   },
   "devDependencies": {
-    "lerna-command-gpm-import": "^0.0.0"
+    "lerna-command-gpm-import": "^0.0.5"
   }
 }
