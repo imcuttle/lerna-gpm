@@ -9,6 +9,7 @@ const { promisify } = require('util')
 const JSON5 = require('json5')
 const execa = require('execa')
 const template = require('lodash.template')
+const { URL } = require('url')
 const writeJsonFile = require('write-json-file')
 const {
   SyncHook,
@@ -43,6 +44,22 @@ function importOptions(yargs) {
     alias: {
       type: 'boolean',
       hidden: true
+    },
+    'git-clone-user': {
+      describe: 'The user of git clone',
+      type: 'string'
+    },
+    'git-clone-user-env-name': {
+      describe: 'The user env name of git clone',
+      type: 'string'
+    },
+    'git-clone-password': {
+      describe: 'The password of git clone',
+      type: 'string'
+    },
+    'git-clone-password-env-name': {
+      describe: 'The password env name of git clone',
+      type: 'string'
     },
     'no-alias': {
       describe: 'Do not alias to package.json in tsconfig.json',
@@ -203,12 +220,20 @@ class GpmImportCommand extends Command {
   }
 
   async gitClone(url, destDir) {
+    let { gitCloneUser, gitCloneUserEnvName, gitClonePassword, gitClonePasswordEnvName } = this.options
+
+    gitCloneUser = gitCloneUser || (gitCloneUserEnvName && process.env[gitCloneUserEnvName])
+    gitClonePassword = gitClonePassword || (gitCloneUserEnvName && process.env[gitClonePassword])
+    const urlObj = new URL(url)
+    urlObj.username = gitCloneUser || ''
+    urlObj.password = gitClonePassword || ''
+
     const { rootPath } = this.project
-    const data = { url, destDir, rootPath }
+    const data = { url: urlObj.toString(), destDir, rootPath }
     await this.hooks.git.preClone.promise(data)
     await runCommand(
       template(this.options.gitCloneCommand || 'git clone ${url} ${destDir}')({
-        url: JSON.stringify(url),
+        url: JSON.stringify(urlObj.toString()),
         destDir: data.destDir
       }),
       data.rootPath
