@@ -223,17 +223,23 @@ class GpmImportCommand extends Command {
     let { gitCloneUser, gitCloneUserEnvName, gitClonePassword, gitClonePasswordEnvName } = this.options
 
     gitCloneUser = gitCloneUser || (gitCloneUserEnvName && process.env[gitCloneUserEnvName])
-    gitClonePassword = gitClonePassword || (gitCloneUserEnvName && process.env[gitClonePassword])
-    const urlObj = new URL(url)
-    urlObj.username = gitCloneUser || ''
-    urlObj.password = gitClonePassword || ''
+    gitClonePassword = gitClonePassword || (gitCloneUserEnvName && process.env[gitClonePasswordEnvName])
+    let urlObj = url
+    try {
+      urlObj = new URL(url)
+      urlObj.username = gitCloneUser || ''
+      urlObj.password = gitClonePassword || ''
+    } catch (e) {
+
+    }
 
     const { rootPath } = this.project
-    const data = { url: urlObj.toString(), destDir, rootPath }
+    const data = { url: String(urlObj), destDir, rootPath }
     await this.hooks.git.preClone.promise(data)
+    this.logger.info(`Cloning ${data.url}`)
     await runCommand(
       template(this.options.gitCloneCommand || 'git clone ${url} ${destDir}')({
-        url: JSON.stringify(urlObj.toString()),
+        url: JSON.stringify(data.url),
         destDir: data.destDir
       }),
       data.rootPath

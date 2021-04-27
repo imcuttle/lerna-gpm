@@ -29,10 +29,14 @@ describe('gpmImport', function () {
         repo-or-git-dir  The path or remote url to an external git repository that contains an npm package  [required]
 
       Import Options:
-            --no-alias      Do not alias to package.json in tsconfig.json  [boolean]
-            --no-bootstrap  Do not automatically chain \`lerna bootstrap\` after changes are made.  [boolean]
-            --dest          Write to which directory  [string]
-            --name          package name  [string]
+            --git-clone-user               The user of git clone  [string]
+            --git-clone-user-env-name      The user env name of git clone  [string]
+            --git-clone-password           The password of git clone  [string]
+            --git-clone-password-env-name  The password env name of git clone  [string]
+            --no-alias                     Do not alias to package.json in tsconfig.json  [boolean]
+            --no-bootstrap                 Do not automatically chain \`lerna bootstrap\` after changes are made.  [boolean]
+            --dest                         Write to which directory  [string]
+            --name                         package name  [string]
 
       Global Options:
             --loglevel       What level of logs to report.  [string] [default: info]
