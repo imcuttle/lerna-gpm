@@ -100,7 +100,7 @@ class GpmLockCommand extends GlobsCommand {
 
     // 判断是否有未 push 的 commit，存在则抛错
     if (!(await fetch(remote, branch, dirPath))) {
-      throw new ValidationError('GIT', `fetch 远端代码失败`)
+      throw new ValidationError('GIT', `${dirPath} fetch 远端代码失败`)
     }
     if (await isAheadOfRemote(remote, branch, dirPath)) {
       throw new ValidationError('GIT', `${dirPath} 存在未推送至远端的 git commit`)
