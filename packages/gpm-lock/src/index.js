@@ -10,6 +10,7 @@ const {
   isAheadOfRemote,
   isGitRepo,
   runCommand,
+  stripGitRemote,
   hasUncommitted,
   fetch
 } = require('lerna-utils-git-command')
@@ -71,7 +72,7 @@ class GpmLockCommand extends GlobsCommand {
           ...config.gpm,
           [nps.relative(rootPath, dirPath)]: {
             branch: gitBranch,
-            url: gitUrl,
+            url: stripGitRemote(gitUrl),
             remote,
             checkout: gitCheckout
           }
