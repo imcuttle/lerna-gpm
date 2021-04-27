@@ -5,20 +5,26 @@
 [![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://prettier.io/)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
 
-> gpm commands preset
+> GPM commands preset
 
 ## Installation
 
 ```bash
-npm install lerna-command-preset-gpm
-# or use yarn
-yarn add lerna-command-preset-gpm
+npm install lerna-cli lerna-command-preset-gpm -D
 ```
 
 ## Usage
 
-```javascript
-const presetGpm = require('lerna-command-preset-gpm')
+- `lerna.json`
+
+```json
+{
+  "extendCommands": ["lerna-command-preset-gpm"]
+}
+```
+
+```bash
+npx lerna help
 ```
 
 ## Contributing
