@@ -5,7 +5,11 @@
   "extendCommands": [
     "../.."
   ],
-  "command": {},
+  "command": {
+    "gpm-import": {
+      "gitCloneUser": "imcuttle"
+    }
+  },
   "version": "0.0.0",
   "gpm": {}
 }

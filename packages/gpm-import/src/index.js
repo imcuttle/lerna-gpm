@@ -28,7 +28,7 @@ const { isGitRepo } = require('lerna-utils-git-command')
 const bootstrap = require('@lerna/bootstrap')
 const { getGitInfoWithValidate } = require('lerna-utils-gpm')
 const { gitRemote, getGitSha } = require('lerna-utils-git-command')
-const { getCurrentBranch, fetch, isBehindRemote, runCommand, runGitCommand } = require('lerna-utils-git-command')
+const { gitRemoteStrip, getCurrentBranch, fetch, isBehindRemote, runCommand, runGitCommand } = require('lerna-utils-git-command')
 const { ValidationError } = require('@lerna/validation-error')
 
 module.exports = factory
@@ -162,7 +162,7 @@ class GpmImportCommand extends Command {
     const { repoOrGitDir, remote } = this.options
     const repoOrGitDirPath = nps.resolve(this.execOpts.cwd, repoOrGitDir)
     if (fs.existsSync(repoOrGitDirPath) && fs.statSync(repoOrGitDirPath).isDirectory()) {
-      const url = gitRemote(this.execOpts.cwd, remote)
+      const url = gitRemoteStrip(this.execOpts.cwd, remote)
       if (!url) {
         throw new ValidationError('', `未找到 ${repoOrGitDirPath} 中 remote.${remote} 地址`)
       }
@@ -285,7 +285,7 @@ class GpmImportCommand extends Command {
         throw new ValidationError('ENOGIT', url + ' 非 Git 仓库')
       }
       await this.gitClone(url, packageDir)
-      const remoteUrl = await gitRemote(url, this.options.remote || 'origin')
+      const remoteUrl = await gitRemoteStrip(url, this.options.remote || 'origin')
       await runGitCommand(
         `remote set-url ${JSON.stringify(this.options.remote || 'origin')} ${JSON.stringify(remoteUrl)}`,
         packageDir

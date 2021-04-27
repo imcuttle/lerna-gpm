@@ -1,6 +1,7 @@
 const cp = require('child_process')
 const { promisify } = require('util')
 const { resolve } = require('path')
+const { URL } = require('url')
 const { readFile, existsSync, statSync } = require('fs')
 
 // `git status -s`
@@ -33,6 +34,18 @@ const hasUncommitted = (cwd) => {
 
 const gitRemote = (cwd, remote) => {
   return runGitCommand(`config --get remote.${remote}.url`, cwd)
+}
+
+const gitRemoteStrip = (cwd, remote) => {
+  return runGitCommand(`config --get remote.${remote}.url`, cwd).then(url => {
+    try {
+      const urlObj = new URL(url)
+      urlObj.username = urlObj.password = ''
+      return urlObj.toString()
+    } catch (e) {
+      return url
+    }
+  })
 }
 
 const getGitSha = (cwd) => {
@@ -104,6 +117,7 @@ module.exports = {
   gitCommit,
   getGitSha,
   isBehindRemote,
+  gitRemoteStrip,
   isAheadOfRemote,
   gitAdd,
   runCommand

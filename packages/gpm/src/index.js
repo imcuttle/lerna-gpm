@@ -2,7 +2,7 @@
  * gpm utils
  * @author 余聪
  */
-const { gitRemote, getGitSha, getCurrentBranch, hasUncommitted, fetch, isAheadOfRemote } = require('lerna-utils-git-command')
+const { gitRemote, gitRemoteStrip, getGitSha, getCurrentBranch, hasUncommitted, fetch, isAheadOfRemote } = require('lerna-utils-git-command')
 const { ValidationError } = require('@lerna/validation-error')
 
 const getGitInfoWithValidate = (exports.getGitInfoWithValidate = async (localDir, { remote = 'origin' } = {}) => {

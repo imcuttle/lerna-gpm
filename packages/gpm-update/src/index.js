@@ -8,7 +8,7 @@ const { promisify } = require('util')
 const gpmImport = require('lerna-command-gpm-import')
 const { hasUncommitted } = require('lerna-utils-git-command')
 const { isBehindRemote, isAheadOfRemote } = require('lerna-utils-git-command')
-const { gitRemote, isGitRepo, getCurrentBranch, fetch, runGitCommand } = require('lerna-utils-git-command')
+const { gitRemote, gitRemoteStrip, isGitRepo, getCurrentBranch, fetch, runGitCommand } = require('lerna-utils-git-command')
 
 const { GlobsCommand } = require('lerna-utils-globs-command')
 const { getFilteredPackages } = require('@lerna/filter-options')
@@ -54,14 +54,14 @@ class GpmUpdateCommand extends GlobsCommand {
     const { rootPath, rootConfigLocation, config } = this.project
     const dirPath = nps.resolve(rootPath, dir)
     if (!fs.existsSync(dirPath)) {
-      const dest = this.getPackageDirectories().find(str => dir.startsWith(str))
+      const dest = this.getPackageDirectories().find((str) => dir.startsWith(str))
       await new Promise((resolve, reject) => {
         // fake promise api
         gpmImport({
           ...this.argv,
           repoOrGitDir: url,
           name: dir.slice(dest.length).replace(/^\//, ''),
-          dest: dest,
+          dest: dest
         }).then(resolve, reject)
       })
     }
@@ -69,7 +69,7 @@ class GpmUpdateCommand extends GlobsCommand {
     if (!(await isGitRepo(dirPath))) {
       throw new ValidationError('ENOGIT', dirPath + ' 非 Git 仓库')
     }
-    const gitUrl = await gitRemote(dirPath, remote)
+    const gitUrl = await gitRemoteStrip(dirPath, remote)
     if (gitUrl !== url) {
       throw new ValidationError('ENOGIT', 'git remote url 不匹配')
     }
