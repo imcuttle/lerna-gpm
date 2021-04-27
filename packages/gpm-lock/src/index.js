@@ -103,7 +103,7 @@ class GpmLockCommand extends GlobsCommand {
       throw new ValidationError('GIT', `fetch 远端代码失败`)
     }
     if (await isAheadOfRemote(remote, branch, dirPath)) {
-      throw new ValidationError('GIT', `存在未推送至远端的 git commit`)
+      throw new ValidationError('GIT', `${dirPath} 存在未推送至远端的 git commit`)
     }
 
     // 根据本地 git 更新 lerna.json gpm 配置

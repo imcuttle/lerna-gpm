@@ -84,7 +84,7 @@ class GpmUpdateCommand extends GlobsCommand {
     }
 
     if (await isAheadOfRemote(remote, branch, dirPath)) {
-      throw new ValidationError('ENOGIT', `存在未推送至远端的 git commit`)
+      throw new ValidationError('ENOGIT', `${dirPath} 存在未推送至远端的 git commit`)
     }
 
     const gitBranch = await getCurrentBranch(dirPath)
