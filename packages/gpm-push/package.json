@@ -4,7 +4,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "余聪 <yucong@yuanfudao.com>",
+  "author": "imcuttle <imcuttle@163.com>",
   "description": "gpm push command",
   "main": "src",
   "scripts": {
@@ -21,9 +21,9 @@
     "lodash.template": "^4.5.0"
   },
   "keywords": [
-    "余聪",
+    "imcuttle",
     "gpm-push",
-    "余聪",
+    "imcuttle",
     "lerna",
     "commands",
     "lerna-commands"

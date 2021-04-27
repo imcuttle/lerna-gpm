@@ -4,7 +4,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "余聪 <yucong@yuanfudao.com>",
+  "author": "imcuttle <imcuttle@163.com>",
   "description": "import git repo like git submodule",
   "main": "src",
   "scripts": {
@@ -27,9 +27,9 @@
     "write-json-file": "^4.3.0"
   },
   "keywords": [
-    "余聪",
+    "imcuttle",
     "gpm-import",
-    "余聪",
+    "imcuttle",
     "lerna",
     "commands",
     "lerna-commands"

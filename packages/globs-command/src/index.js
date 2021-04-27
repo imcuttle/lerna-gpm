@@ -1,6 +1,6 @@
 /**
  * globs command util
- * @author 余聪
+ * @author imcuttle
  */
 const { Command } = require('@lerna/command')
 const nps = require('path')

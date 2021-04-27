@@ -1,7 +1,7 @@
 # lerna-commands
 
-[![Build status](https://img.shields.io/travis/余聪/lerna-commands/master.svg?style=flat-square)](https://travis-ci.org/余聪/lerna-commands)
-[![Test coverage](https://img.shields.io/codecov/c/github/余聪/lerna-commands.svg?style=flat-square)](https://codecov.io/github/余聪/lerna-commands?branch=master)
+[![Build status](https://img.shields.io/travis/imcuttle/lerna-commands/master.svg?style=flat-square)](https://travis-ci.com/imcuttle/lerna-commands)
+[![Test coverage](https://img.shields.io/codecov/c/github/imcuttle/lerna-commands.svg?style=flat-square)](https://codecov.io/github/imcuttle/lerna-commands?branch=master)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg?style=flat-square)](https://lernajs.io/)
 [![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://prettier.io/)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
@@ -24,8 +24,8 @@
 
 ## Authors
 
-This library is written and maintained by 余聪, <a href="mailto:yucong@yuanfudao.com">yucong@yuanfudao.com</a>.
+This library is written and maintained by imcuttle, <a href="mailto:imcuttle@163.com">imcuttle@163.com</a>.
 
 ## License
 
-MIT - [余聪](https://github.com/余聪) 🐟
+MIT - [imcuttle](https://github.com/imcuttle) 🐟

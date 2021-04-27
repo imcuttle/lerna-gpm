@@ -1,6 +1,6 @@
 /**
  * gpm push command
- * @author 余聪
+ * @author imcuttle
  */
 const fs = require('fs')
 const nps = require('path')
@@ -32,8 +32,6 @@ function pushOptions(yargs) {
 }
 
 class GpmPushCommand extends GlobsCommand {
-  static name = 'gpm-push';
-
   get requiresGit() {
     return true
   }
@@ -79,3 +77,4 @@ class GpmPushCommand extends GlobsCommand {
     }
   }
 }
+GpmPushCommand.name = 'gpm-push';

@@ -4,7 +4,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "余聪 <yucong@yuanfudao.com>",
+  "author": "imcuttle <imcuttle@163.com>",
   "description": "gpm commands preset",
   "main": "command",
   "scripts": {
@@ -22,9 +22,9 @@
     "lerna-command-gpm-update": "^0.0.13"
   },
   "keywords": [
-    "余聪",
+    "imcuttle",
     "preset-gpm",
-    "余聪",
+    "imcuttle",
     "lerna",
     "commands",
     "lerna-commands"

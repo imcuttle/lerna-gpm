@@ -1,6 +1,6 @@
 /**
  * gpm utils
- * @author 余聪
+ * @author imcuttle
  */
 const { gitRemote, gitRemoteStrip, getGitSha, getCurrentBranch, hasUncommitted, fetch, isAheadOfRemote } = require('lerna-utils-git-command')
 const { ValidationError } = require('@lerna/validation-error')

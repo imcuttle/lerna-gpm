@@ -1,6 +1,6 @@
 /**
  * update git repo
- * @author 余聪
+ * @author imcuttle
  */
 const fs = require('fs')
 const nps = require('path')
@@ -21,8 +21,6 @@ function factory(argv) {
 }
 
 class GpmUpdateCommand extends GlobsCommand {
-  static name = 'gpm-update'
-
   get requiresGit() {
     return true
   }
@@ -98,3 +96,4 @@ class GpmUpdateCommand extends GlobsCommand {
     }
   }
 }
+GpmUpdateCommand.name = 'gpm-update'

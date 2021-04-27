@@ -1,6 +1,6 @@
 /**
  * gpm lock version command
- * @author 余聪
+ * @author imcuttle
  */
 const fs = require('fs')
 const nps = require('path')
@@ -43,7 +43,6 @@ function lockOptions(yargs) {
 
 
 class GpmLockCommand extends GlobsCommand {
-  static name = 'gpm-lock'
 
   get requiresGit() {
     return true
@@ -126,3 +125,4 @@ class GpmLockCommand extends GlobsCommand {
     }
   }
 }
+GpmLockCommand.name = 'gpm-lock'

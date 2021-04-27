@@ -1,6 +1,6 @@
 /**
  * gpm check command
- * @author 余聪
+ * @author imcuttle
  */
 const fs = require('fs')
 const nps = require('path')
@@ -29,7 +29,6 @@ function factory(argv) {
 }
 
 class GpmCheckCommand extends GlobsCommand {
-  static name = 'gpm-check'
 
   get checkBehindRemote() {
     return false
@@ -77,3 +76,4 @@ class GpmCheckCommand extends GlobsCommand {
     console.log(JSON.stringify(stats, null, 2))
   }
 }
+GpmCheckCommand.name = 'gpm-check'

@@ -1,6 +1,6 @@
 /**
  * gpm pull command
- * @author 余聪
+ * @author imcuttle
  */
 const fs = require('fs')
 const nps = require('path')
@@ -24,8 +24,6 @@ function factory(argv) {
 }
 
 class GpmPullCommand extends GlobsCommand {
-  static name = 'gpm-pull'
-
   get requiresGit() {
     return true
   }
@@ -76,3 +74,4 @@ class GpmPullCommand extends GlobsCommand {
     }
   }
 }
+GpmPullCommand.name = 'gpm-pull'

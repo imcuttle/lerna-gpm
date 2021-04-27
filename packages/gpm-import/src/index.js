@@ -1,6 +1,6 @@
 /**
  * import git repo like git submodule
- * @author 余聪
+ * @author imcuttle
  */
 
 const nps = require('path')
@@ -120,8 +120,6 @@ const hasUncommitted = (cwd) => {
 }
 
 class GpmImportCommand extends Command {
-  static name = 'gpm-import'
-
   get requiresGit() {
     return false
   }
@@ -395,3 +393,5 @@ class GpmImportCommand extends Command {
     this.logger.success(`导入 ${nps.relative(this.execOpts.cwd, packageDir)} 成功!`)
   }
 }
+
+GpmImportCommand.name = 'gpm-import'

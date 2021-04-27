@@ -4,7 +4,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "余聪 <yucong@yuanfudao.com>",
+  "author": "imcuttle <imcuttle@163.com>",
   "description": "gpm utils",
   "main": "src",
   "scripts": {
@@ -18,9 +18,9 @@
     "lerna-utils-git-command": "^0.0.9"
   },
   "keywords": [
-    "余聪",
+    "imcuttle",
     "gpm",
-    "余聪",
+    "imcuttle",
     "lerna",
     "commands",
     "lerna-commands"
