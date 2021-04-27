@@ -36,16 +36,18 @@ const gitRemote = (cwd, remote) => {
   return runGitCommand(`config --get remote.${remote}.url`, cwd)
 }
 
+const stripGitRemote = (url) => {
+  try {
+    const urlObj = new URL(url)
+    urlObj.username = urlObj.password = ''
+    return urlObj.toString()
+  } catch (e) {
+    return url
+  }
+}
+
 const gitRemoteStrip = (cwd, remote) => {
-  return runGitCommand(`config --get remote.${remote}.url`, cwd).then(url => {
-    try {
-      const urlObj = new URL(url)
-      urlObj.username = urlObj.password = ''
-      return urlObj.toString()
-    } catch (e) {
-      return url
-    }
-  })
+  return runGitCommand(`config --get remote.${remote}.url`, cwd).then(url => stripGitRemote(url))
 }
 
 const getGitSha = (cwd) => {
@@ -120,5 +122,6 @@ module.exports = {
   gitRemoteStrip,
   isAheadOfRemote,
   gitAdd,
-  runCommand
+  runCommand,
+  stripGitRemote
 }

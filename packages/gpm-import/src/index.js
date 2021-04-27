@@ -27,7 +27,7 @@ const findUp = require('find-up')
 const { isGitRepo } = require('lerna-utils-git-command')
 const bootstrap = require('@lerna/bootstrap')
 const { getGitInfoWithValidate } = require('lerna-utils-gpm')
-const { gitRemote, getGitSha } = require('lerna-utils-git-command')
+const { gitRemote, stripGitRemote, getGitSha } = require('lerna-utils-git-command')
 const { gitRemoteStrip, getCurrentBranch, fetch, isBehindRemote, runCommand, runGitCommand } = require('lerna-utils-git-command')
 const { ValidationError } = require('@lerna/validation-error')
 
@@ -130,14 +130,14 @@ class GpmImportCommand extends Command {
     return this.project.packageConfigs.filter((p) => p.endsWith('*')).map((p) => nps.dirname(p))
   }
 
-  get externalRepoBasename() {
-    const { url } = this.repoOrGitDir
+  async getExternalRepoBasename() {
+    const { url } = await this.getRepoOrGitDir()
     const { name } = this.options
     return name || nps.basename(url).replace(/\..+$/, '')
   }
 
-  get targetDir() {
-    const externalRepoBase = this.externalRepoBasename
+  async getTargetDir() {
+    const externalRepoBase = await this.getExternalRepoBasename()
 
     // Compute a target directory relative to the Lerna root
     const targetBase = this.getTargetBase()
@@ -158,11 +158,11 @@ class GpmImportCommand extends Command {
     return this.getPackageDirectories().shift() || 'packages'
   }
 
-  get repoOrGitDir() {
+  async getRepoOrGitDir() {
     const { repoOrGitDir, remote } = this.options
     const repoOrGitDirPath = nps.resolve(this.execOpts.cwd, repoOrGitDir)
     if (fs.existsSync(repoOrGitDirPath) && fs.statSync(repoOrGitDirPath).isDirectory()) {
-      const url = gitRemoteStrip(this.execOpts.cwd, remote)
+      const url = await gitRemote(this.execOpts.cwd, remote)
       if (!url) {
         throw new ValidationError('', `未找到 ${repoOrGitDirPath} 中 remote.${remote} 地址`)
       }
@@ -255,7 +255,7 @@ class GpmImportCommand extends Command {
         ...config,
         gpm: {
           ...config.gpm,
-          [nps.relative(rootPath, this.targetDir)]: {
+          [nps.relative(rootPath, await this.getTargetDir())]: {
             branch,
             url,
             remote,
@@ -274,10 +274,10 @@ class GpmImportCommand extends Command {
     const { rootPath } = this.project
     const getGitInfo = async (localDir) => getGitInfoWithValidate(localDir, { remote: this.options.remote })
 
-    const { type, url } = this.repoOrGitDir
+    const { type, url } = await this.getRepoOrGitDir()
     let tmpInfo
-    const packageDir = this.targetDir
-    this.logger.verbose('this.repoOrGitDir: %o', this.repoOrGitDir)
+    const packageDir = await this.getTargetDir()
+    this.logger.verbose('this.repoOrGitDir: %o', { type, url })
     this.logger.verbose('packageDir: %o', packageDir)
 
     if ('file' === type) {
@@ -285,7 +285,7 @@ class GpmImportCommand extends Command {
         throw new ValidationError('ENOGIT', url + ' 非 Git 仓库')
       }
       await this.gitClone(url, packageDir)
-      const remoteUrl = await gitRemoteStrip(url, this.options.remote || 'origin')
+      const remoteUrl = await gitRemote(url, this.options.remote || 'origin')
       await runGitCommand(
         `remote set-url ${JSON.stringify(this.options.remote || 'origin')} ${JSON.stringify(remoteUrl)}`,
         packageDir
@@ -298,7 +298,8 @@ class GpmImportCommand extends Command {
 
     const writeConfig = {
       gitRemote: this.options.remote,
-      ...tmpInfo
+      ...tmpInfo,
+      gitUrl: stripGitRemote(tmpInfo.gitUrl)
     }
     await this.hooks.writeConfig.promise(writeConfig)
 
