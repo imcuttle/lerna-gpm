@@ -1,12 +1,5 @@
 {
-  "gpm": {
-    "packages/tmp": {
-      "branch": "master",
-      "url": "https://github.com/imcuttle/visit-tree.git",
-      "remote": "origin",
-      "checkout": "2ce997487986c8fcbf07e6f379adbd8367a3aaa6"
-    }
-  },
+  "gpm": {},
   "packages": [
     "packages/*"
   ],
