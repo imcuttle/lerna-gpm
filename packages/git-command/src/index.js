@@ -15,9 +15,6 @@ const runCommand = async (cmd, cwd) => {
       },
       encoding: 'utf8'
     })
-    if (stderr) {
-      console.error('stderr', stderr)
-    }
     return stdout.trim()
   } catch (err) {
     throw err
