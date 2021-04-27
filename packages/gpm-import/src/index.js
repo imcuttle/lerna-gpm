@@ -223,7 +223,7 @@ class GpmImportCommand extends Command {
     let { gitCloneUser, gitCloneUserEnvName, gitClonePassword, gitClonePasswordEnvName } = this.options
 
     gitCloneUser = gitCloneUser || (gitCloneUserEnvName && process.env[gitCloneUserEnvName])
-    gitClonePassword = gitClonePassword || (gitCloneUserEnvName && process.env[gitClonePasswordEnvName])
+    gitClonePassword = gitClonePassword || (gitClonePasswordEnvName && process.env[gitClonePasswordEnvName])
     let urlObj = url
     try {
       urlObj = new URL(url)
