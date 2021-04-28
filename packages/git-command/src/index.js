@@ -5,9 +5,10 @@ const { URL } = require('url')
 const { readFile, existsSync, statSync } = require('fs')
 
 // `git status -s`
-const runCommand = async (cmd, cwd) => {
+const runCommand = async (cmd, cwd, opts) => {
   try {
     const { stdout, stderr } = await promisify(cp.exec)(`${cmd}`, {
+      ...opts,
       cwd,
       env: {
         ...process.env,
@@ -47,7 +48,7 @@ const stripGitRemote = (url) => {
 }
 
 const gitRemoteStrip = (cwd, remote) => {
-  return runGitCommand(`config --get remote.${remote}.url`, cwd).then(url => stripGitRemote(url))
+  return runGitCommand(`config --get remote.${remote}.url`, cwd).then((url) => stripGitRemote(url))
 }
 
 const getGitSha = (cwd) => {

@@ -62,19 +62,14 @@ class GpmPushCommand extends GlobsCommand {
           branch,
           remote
         }),
-        dirPath
+        dirPath,
+        { stdio: 'inherit' }
       )
     }
   }
 
   async execute() {
     super.execute()
-
-    for (const [dir, config] of Object.entries(config.gpm)) {
-      this.logger.info('push:', dir)
-      await this.executeEach(dir, config || {})
-      this.logger.verbose('push done:', dir)
-    }
   }
 }
-GpmPushCommand.name = 'gpm-push';
+GpmPushCommand.name = 'gpm-push'
