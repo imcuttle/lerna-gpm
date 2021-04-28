@@ -35,15 +35,13 @@ function lockOptions(yargs) {
     push: {
       group: 'Command Options:',
       describe: '是否执行 gpm-push',
-      type: 'boolean',
-    },
+      type: 'boolean'
+    }
   }
   return pushOptions(yargs.options(opts).group(Object.keys(opts), 'Lock Options:'))
 }
 
-
 class GpmLockCommand extends GlobsCommand {
-
   get requiresGit() {
     return true
   }
@@ -110,18 +108,25 @@ class GpmLockCommand extends GlobsCommand {
 
     // git add lerna.json
     // git commit -am "chore: gpm-lock" （允许外部自定义 commitmsg，插件 API 设计）
-    await runGitCommand(`add ${JSON.stringify(rootConfigLocation)}`, rootPath)
-    await runGitCommand(`commit -am ${JSON.stringify(this.options.gitCommitMessage || 'chore: gpm-lock')}`, rootPath)
   }
 
   async execute() {
-    await super.execute()
+    const { rootPath, rootConfigLocation } = this.project
+    if (await hasUncommitted(rootPath)) {
+      throw new ValidationError('ENOGIT', `${rootPath} 中具有未提交的改动，请先 git commit`)
+    }
 
     if (this.executeGpmEntries.length && this.options.push) {
-      return new Promise((resolve, reject) => {
+      await new Promise((resolve, reject) => {
         // fake promise api
         gpmPush(this.argv).then(resolve, reject)
       })
+    }
+
+    await super.execute()
+    if (this.executeGpmEntries.length && (await hasUncommitted(rootPath))) {
+      await runGitCommand(`add ${JSON.stringify(rootConfigLocation)}`, rootPath)
+      await runGitCommand(`commit -am ${JSON.stringify(this.options.gitCommitMessage || 'chore: gpm-lock')}`, rootPath)
     }
   }
 }
