@@ -1,6 +1,6 @@
 {
   "name": "lerna-command-gpm-update",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "publishConfig": {
     "access": "public"
   },
@@ -16,9 +16,9 @@
   "dependencies": {
     "@lerna/filter-options": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
-    "lerna-command-gpm-import": "^0.0.12",
-    "lerna-utils-git-command": "^0.0.9",
-    "lerna-utils-globs-command": "^0.0.9"
+    "lerna-command-gpm-import": "^0.0.13",
+    "lerna-utils-git-command": "^0.0.10",
+    "lerna-utils-globs-command": "^0.0.10"
   },
   "keywords": [
     "imcuttle",

@@ -1,6 +1,6 @@
 {
   "name": "lerna-command-gpm-pull",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "publishConfig": {
     "access": "public"
   },
@@ -16,9 +16,9 @@
   "dependencies": {
     "@lerna/filter-options": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
-    "lerna-command-gpm-lock": "^0.0.14",
-    "lerna-utils-git-command": "^0.0.9",
-    "lerna-utils-globs-command": "^0.0.9",
+    "lerna-command-gpm-lock": "^0.0.15",
+    "lerna-utils-git-command": "^0.0.10",
+    "lerna-utils-globs-command": "^0.0.10",
     "lodash.template": "^4.5.0"
   },
   "keywords": [
@@ -35,6 +35,6 @@
     "directory": "packages/gpm-pull"
   },
   "devDependencies": {
-    "lerna-command-gpm-import": "^0.0.12"
+    "lerna-command-gpm-import": "^0.0.13"
   }
 }

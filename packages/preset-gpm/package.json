@@ -1,6 +1,6 @@
 {
   "name": "lerna-command-preset-gpm",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "publishConfig": {
     "access": "public"
   },
@@ -14,12 +14,12 @@
     "version": "npm test && npm run packlimit"
   },
   "dependencies": {
-    "lerna-command-gpm-check": "^0.0.14",
-    "lerna-command-gpm-import": "^0.0.12",
-    "lerna-command-gpm-lock": "^0.0.14",
-    "lerna-command-gpm-pull": "^0.0.14",
-    "lerna-command-gpm-push": "^0.0.14",
-    "lerna-command-gpm-update": "^0.0.13"
+    "lerna-command-gpm-check": "^0.0.15",
+    "lerna-command-gpm-import": "^0.0.13",
+    "lerna-command-gpm-lock": "^0.0.15",
+    "lerna-command-gpm-pull": "^0.0.15",
+    "lerna-command-gpm-push": "^0.0.15",
+    "lerna-command-gpm-update": "^0.0.14"
   },
   "keywords": [
     "imcuttle",
