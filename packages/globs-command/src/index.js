@@ -59,12 +59,16 @@ class GlobsCommand extends Command {
     return this.validPackages.find((pkg) => pkg.location === nps.resolve(rootPath, dir))
   }
 
+  async beforeExecute() {}
+
   async execute() {
     const { config, rootPath } = this.project
 
     this.executeGpmEntries = Object.entries(config.gpm).filter(([dir, config]) => {
       return this.findPackage(dir)
     })
+
+    await this.beforeExecute()
 
     let limit
     if (this.options.parallel) {

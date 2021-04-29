@@ -36,7 +36,16 @@ function lockOptions(yargs) {
       group: 'Command Options:',
       describe: '是否执行 gpm-push',
       type: 'boolean'
-    }
+    },
+    'no-git-lint': {
+      describe: 'Do not check root git has uncommitted before execute lock',
+      type: 'boolean'
+    },
+    'git-lint': {
+      // proxy for --no-bootstrap
+      hidden: true,
+      type: 'boolean'
+    },
   }
   return pushOptions(yargs.options(opts).group(Object.keys(opts), 'Lock Options:'))
 }
@@ -110,17 +119,19 @@ class GpmLockCommand extends GlobsCommand {
     // git commit -am "chore: gpm-lock" （允许外部自定义 commitmsg，插件 API 设计）
   }
 
-  async execute() {
-    const { rootPath, rootConfigLocation } = this.project
-    if (await hasUncommitted(rootPath)) {
-      throw new ValidationError('ENOGIT', `${rootPath} 中具有未提交的改动，请先 git commit`)
-    }
-
+  async beforeExecute() {
     if (this.executeGpmEntries.length && this.options.push) {
       await new Promise((resolve, reject) => {
         // fake promise api
         gpmPush(this.argv).then(resolve, reject)
       })
+    }
+  }
+
+  async execute() {
+    const { rootPath, rootConfigLocation } = this.project
+    if (this.options.gitLint !== false && await hasUncommitted(rootPath)) {
+      throw new ValidationError('ENOGIT', `${rootPath} 中具有未提交的改动，请先 git commit`)
     }
 
     await super.execute()

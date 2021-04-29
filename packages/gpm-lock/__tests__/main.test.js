@@ -57,7 +57,7 @@ describe('gpmLock', function () {
       )
     )
 
-    exec('lerna gpm-lock')
+    exec('lerna gpm-lock --no-git-lint')
     expect(readLernaJson().gpm['packages/tmp']).toEqual({
       branch: 'master',
       remote: 'origin',
@@ -73,6 +73,6 @@ describe('gpmLock', function () {
 
   it('has un pushed commit', function () {
     exec('cd packages/tmp && touch tmp.file && git add . && git commit -am "chore: tmp"')
-    expect(() => exec('lerna gpm-lock')).toThrowError(/存在未推送至远端的 git commit/)
+    expect(() => exec('lerna gpm-lock --no-git-lint')).toThrowError(/存在未推送至远端的 git commit/)
   })
 })
