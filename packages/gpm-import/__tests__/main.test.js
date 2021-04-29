@@ -122,6 +122,8 @@ describe('gpmImport', function () {
     const head = execPure('cd tmp && git rev-parse HEAD')
     exec('lerna gpm-import --git-clone-user=abc --name tmp https://github.com/imcuttle/visit-tree.git')
 
-    expect(execPure('cd packages/tmp && git config user.name')).toMatchInlineSnapshot(`"imcuttle"`)
+    expect(execPure('cd packages/tmp && git config --get remote.origin.url')).toMatchInlineSnapshot(
+      `"https://abc@github.com/imcuttle/visit-tree.git"`
+    )
   })
 })
