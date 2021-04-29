@@ -57,7 +57,7 @@ describe('gpmPull', function () {
       )
     )
 
-    exec('lerna gpm-pull packages/tmp --lock')
+    exec('lerna gpm-pull packages/tmp --lock --no-git-lint')
     expect(readLernaJson().gpm['packages/tmp']).toEqual({
       branch: 'master',
       checkout: head,
