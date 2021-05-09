@@ -18,7 +18,7 @@ const exec = (cmd) => {
 }
 
 describe('gpmImport', function () {
-  it('spec case --help', function () {
+  it.skip('spec case --help', function () {
     const output = exec('lerna gpm-import --help')
     expect(output).toMatchInlineSnapshot(`
       "lerna gpm-import <repo-or-git-dir>
