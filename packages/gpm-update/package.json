@@ -1,6 +1,6 @@
 {
   "name": "lerna-command-gpm-update",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "publishConfig": {
     "access": "public"
   },
@@ -16,7 +16,7 @@
   "dependencies": {
     "@lerna/filter-options": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
-    "lerna-command-gpm-import": "^0.0.13",
+    "lerna-command-gpm-import": "^0.0.14",
     "lerna-utils-git-command": "^0.0.10",
     "lerna-utils-globs-command": "^0.0.10"
   },
