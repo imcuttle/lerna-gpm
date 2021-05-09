@@ -45,7 +45,7 @@ function lockOptions(yargs) {
       // proxy for --no-bootstrap
       hidden: true,
       type: 'boolean'
-    },
+    }
   }
   return pushOptions(yargs.options(opts).group(Object.keys(opts), 'Lock Options:'))
 }
@@ -130,7 +130,7 @@ class GpmLockCommand extends GlobsCommand {
 
   async execute() {
     const { rootPath, rootConfigLocation } = this.project
-    if (this.options.gitLint !== false && await hasUncommitted(rootPath)) {
+    if (this.options.gitLint !== false && (await hasUncommitted(rootPath))) {
       throw new ValidationError('ENOGIT', `${rootPath} 中具有未提交的改动，请先 git commit`)
     }
 
@@ -140,5 +140,5 @@ class GpmLockCommand extends GlobsCommand {
       await runGitCommand(`commit -am ${JSON.stringify(this.options.gitCommitMessage || 'chore: gpm-lock')}`, rootPath)
     }
   }
+  static name = 'gpm-lock'
 }
-GpmLockCommand.name = 'gpm-lock'

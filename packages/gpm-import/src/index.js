@@ -28,7 +28,14 @@ const { isGitRepo } = require('lerna-utils-git-command')
 const bootstrap = require('@lerna/bootstrap')
 const { getGitInfoWithValidate } = require('lerna-utils-gpm')
 const { gitRemote, stripGitRemote, getGitSha } = require('lerna-utils-git-command')
-const { gitRemoteStrip, getCurrentBranch, fetch, isBehindRemote, runCommand, runGitCommand } = require('lerna-utils-git-command')
+const {
+  gitRemoteStrip,
+  getCurrentBranch,
+  fetch,
+  isBehindRemote,
+  runCommand,
+  runGitCommand
+} = require('lerna-utils-git-command')
 const { ValidationError } = require('@lerna/validation-error')
 
 module.exports = factory
@@ -227,9 +234,7 @@ class GpmImportCommand extends Command {
       urlObj = new URL(url)
       urlObj.username = gitCloneUser || ''
       urlObj.password = gitClonePassword || ''
-    } catch (e) {
-
-    }
+    } catch (e) {}
 
     const { rootPath } = this.project
     const data = { url: String(urlObj), destDir, rootPath }
@@ -323,7 +328,13 @@ class GpmImportCommand extends Command {
 
     if (this.options.alias !== false) {
       this.logger.info('Aliasing')
-      const result = execa.commandSync(`npm install ${packageDir}`, { stdin: 'ignore', stdout: 'ignore', stderr: 'ignore', cwd: rootPath, reject: false })
+      const result = execa.commandSync(`npm install ${packageDir}`, {
+        stdin: 'ignore',
+        stdout: 'ignore',
+        stderr: 'ignore',
+        cwd: rootPath,
+        reject: false
+      })
       if (result.stderr) {
         this.logger.error(result.stderr)
       }
@@ -392,6 +403,5 @@ class GpmImportCommand extends Command {
 
     this.logger.success(`导入 ${nps.relative(this.execOpts.cwd, packageDir)} 成功!`)
   }
+  static name = 'gpm-import'
 }
-
-GpmImportCommand.name = 'gpm-import'

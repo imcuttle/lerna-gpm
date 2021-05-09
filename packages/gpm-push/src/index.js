@@ -69,7 +69,8 @@ class GpmPushCommand extends GlobsCommand {
   }
 
   async execute() {
-    super.execute()
+    return super.execute()
   }
+
+  static name = 'gpm-push'
 }
-GpmPushCommand.name = 'gpm-push'

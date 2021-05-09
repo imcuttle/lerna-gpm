@@ -29,7 +29,6 @@ function factory(argv) {
 }
 
 class GpmCheckCommand extends GlobsCommand {
-
   get checkBehindRemote() {
     return false
   }
@@ -75,5 +74,5 @@ class GpmCheckCommand extends GlobsCommand {
 
     console.log(JSON.stringify(stats, null, 2))
   }
+  static name = 'gpm-check'
 }
-GpmCheckCommand.name = 'gpm-check'

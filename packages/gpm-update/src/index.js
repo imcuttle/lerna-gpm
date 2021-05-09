@@ -8,7 +8,14 @@ const { promisify } = require('util')
 const gpmImport = require('lerna-command-gpm-import')
 const { hasUncommitted } = require('lerna-utils-git-command')
 const { isBehindRemote, isAheadOfRemote } = require('lerna-utils-git-command')
-const { gitRemote, gitRemoteStrip, isGitRepo, getCurrentBranch, fetch, runGitCommand } = require('lerna-utils-git-command')
+const {
+  gitRemote,
+  gitRemoteStrip,
+  isGitRepo,
+  getCurrentBranch,
+  fetch,
+  runGitCommand
+} = require('lerna-utils-git-command')
 
 const { GlobsCommand } = require('lerna-utils-globs-command')
 const { getFilteredPackages } = require('@lerna/filter-options')
@@ -95,5 +102,6 @@ class GpmUpdateCommand extends GlobsCommand {
       await runGitCommand(`clean -fd`, dirPath)
     }
   }
+
+  static name = 'gpm-update'
 }
-GpmUpdateCommand.name = 'gpm-update'

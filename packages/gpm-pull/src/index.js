@@ -73,5 +73,6 @@ class GpmPullCommand extends GlobsCommand {
       })
     }
   }
+
+  static name = 'gpm-pull'
 }
-GpmPullCommand.name = 'gpm-pull'
