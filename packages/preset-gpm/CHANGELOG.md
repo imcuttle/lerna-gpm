@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.17](https://github.com/imcuttle/lerna-commands/compare/lerna-command-preset-gpm@0.0.16...lerna-command-preset-gpm@0.0.17) (2021-05-20)
+
+**Note:** Version bump only for package lerna-command-preset-gpm
+
 ## [0.0.16](https://github.com/imcuttle/lerna-commands/compare/lerna-command-preset-gpm@0.0.15...lerna-command-preset-gpm@0.0.16) (2021-05-09)
 
 **Note:** Version bump only for package lerna-command-preset-gpm
