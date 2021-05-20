@@ -2,6 +2,7 @@ const cp = require('child_process')
 const { promisify } = require('util')
 const { resolve } = require('path')
 const { URL } = require('url')
+const isCi = require('is-ci')
 const { readFile, existsSync, statSync } = require('fs')
 
 // `git status -s`
@@ -11,8 +12,8 @@ const runCommand = async (cmd, cwd, opts) => {
       ...opts,
       cwd,
       env: {
-        ...process.env,
-        GIT_TERMINAL_PROMPT: '0'
+        GIT_TERMINAL_PROMPT: isCi ? '0' : '1',
+        ...process.env
       },
       encoding: 'utf8'
     })

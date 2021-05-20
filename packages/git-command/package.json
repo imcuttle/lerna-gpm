@@ -12,6 +12,9 @@
     "dev": "npm run build -- --watch",
     "version": "npm test && npm run packlimit"
   },
+  "dependencies": {
+    "is-ci": "^3.0.0"
+  },
   "keywords": [
     "imcuttle",
     "git-command",
