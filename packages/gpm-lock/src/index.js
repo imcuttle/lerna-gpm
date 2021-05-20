@@ -139,7 +139,7 @@ class GpmLockCommand extends GlobsCommand {
       await runGitCommand(`add ${JSON.stringify(rootConfigLocation)}`, rootPath)
       await runGitCommand(
         `commit -am ${JSON.stringify(this.options.gitCommitMessage || 'chore: gpm-lock')} ${
-          process.env.NODE_ENV === 'test' ? '--verify' : ''
+          process.env.NODE_ENV === 'test' ? '--no-verify' : ''
         }`,
         rootPath
       )
