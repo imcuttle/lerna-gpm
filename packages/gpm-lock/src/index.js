@@ -137,7 +137,12 @@ class GpmLockCommand extends GlobsCommand {
     await super.execute()
     if (this.executeGpmEntries.length && (await hasUncommitted(rootPath))) {
       await runGitCommand(`add ${JSON.stringify(rootConfigLocation)}`, rootPath)
-      await runGitCommand(`commit -am ${JSON.stringify(this.options.gitCommitMessage || 'chore: gpm-lock')}`, rootPath)
+      await runGitCommand(
+        `commit -am ${JSON.stringify(this.options.gitCommitMessage || 'chore: gpm-lock')} ${
+          process.env.NODE_ENV === 'test' ? '--verify' : ''
+        }`,
+        rootPath
+      )
     }
   }
   static name = 'gpm-lock'
