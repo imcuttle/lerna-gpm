@@ -1,6 +1,6 @@
 {
   "name": "lerna-command-gpm-alias",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "publishConfig": {
     "access": "public"
   },
@@ -17,7 +17,7 @@
     "@lerna/filter-options": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
     "fs-extra": "^10.0.0",
-    "lerna-utils-globs-command": "^0.0.11"
+    "lerna-utils-globs-command": "^0.0.12"
   },
   "keywords": [
     "imcuttle",
@@ -33,6 +33,6 @@
     "directory": "packages/gpm-alias"
   },
   "devDependencies": {
-    "lerna-command-preset-gpm": "^0.0.17"
+    "lerna-command-preset-gpm": "^0.0.18"
   }
 }
