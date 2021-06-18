@@ -1,0 +1,38 @@
+{
+  "name": "lerna-command-gpm-alias",
+  "version": "0.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "imcuttle <yucong@yuanfudao.com>",
+  "description": "Alias GPM Package",
+  "main": "src",
+  "scripts": {
+    "test": "../../scripts/run test",
+    "packlimit": "../../scripts/run packlimit",
+    "dev": "npm run build -- --watch",
+    "version": "npm test && npm run packlimit"
+  },
+  "dependencies": {
+    "@lerna/filter-options": "^4.0.0",
+    "@lerna/validation-error": "^4.0.0",
+    "fs-extra": "^10.0.0",
+    "lerna-utils-globs-command": "^0.0.11"
+  },
+  "keywords": [
+    "imcuttle",
+    "gpm-alias",
+    "imcuttle",
+    "lerna",
+    "commands",
+    "lerna-commands"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imcuttle/lerna-commands.git",
+    "directory": "packages/gpm-alias"
+  },
+  "devDependencies": {
+    "lerna-command-preset-gpm": "^0.0.17"
+  }
+}

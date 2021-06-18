@@ -10,6 +10,7 @@
 
 ## Packages
 
+- [lerna-command-gpm-alias](packages/gpm-alias) - Alias GPM Package
 - [lerna-command-gpm-check](packages/gpm-check) - gpm check command
 - [lerna-command-gpm-import](packages/gpm-import) - import git repo like git submodule
 - [lerna-command-gpm-lock](packages/gpm-lock) - gpm lock version command
