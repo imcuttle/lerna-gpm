@@ -4,5 +4,6 @@ module.exports = [
   require('lerna-command-gpm-import/command'),
   require('lerna-command-gpm-lock/command'),
   require('lerna-command-gpm-update/command'),
-  require('lerna-command-gpm-check/command')
+  require('lerna-command-gpm-check/command'),
+  require('lerna-command-gpm-alias/command')
 ]
