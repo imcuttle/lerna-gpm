@@ -15,11 +15,13 @@ const exec = (cmd) => {
 }
 
 beforeEach(() => {
+  exec('cp tsconfig-bak.json tsconfig.json')
   exec('lerna gpm-import https://github.com/imcuttle/visit-tree.git --name=tmp')
 })
 
 afterEach(() => {
   exec('rm -rf packages/tmp')
+  exec('rm -rf tsconfig.json')
   exec('rm -rf node_modules')
   writeFileSync(
     fixture('lerna.json'),
@@ -36,6 +38,10 @@ afterEach(() => {
 
 describe('gpmAlias', function () {
   it('spec case', function () {
+    expect(readFileSync(fixture('tsconfig.json'), 'utf-8')).toMatchInlineSnapshot(`
+      "{\\"compilerOptions\\":{\\"paths\\":{\\"@moyuyc/visit-tree\\":[\\"./packages/tmp\\"],\\"@moyuyc/visit-tree/*\\":[\\"./packages/tmp/*\\"]},\\"baseUrl\\":\\".\\"}}
+      "
+    `)
     expect(exec('ls node_modules/@moyuyc/visit-tree')).toMatch(/README\.md/)
   })
 })

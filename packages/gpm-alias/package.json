@@ -15,9 +15,12 @@
   },
   "dependencies": {
     "@lerna/filter-options": "^4.0.0",
+    "@lerna/project": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
     "fs-extra": "^10.0.0",
-    "lerna-utils-globs-command": "^0.0.12"
+    "json5": "^2.2.0",
+    "lerna-utils-globs-command": "^0.0.12",
+    "write-json-file": "^4.3.0"
   },
   "keywords": [
     "imcuttle",

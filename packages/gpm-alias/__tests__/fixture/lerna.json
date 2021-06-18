@@ -1,11 +1,9 @@
 {
-  "packages": [
-    "packages/*"
-  ],
-  "extendCommands": [
-    "../../node_modules/lerna-command-preset-gpm"
-  ],
-  "command": {},
+  "packages": ["packages/*"],
+  "extendCommands": ["../../node_modules/lerna-command-preset-gpm"],
+  "command": {
+    "gpm-alias": {}
+  },
   "version": "0.0.0",
   "gpm": {}
 }
