@@ -13,7 +13,7 @@
       "branch": "master",
       "url": "https://github.com/imcuttle/visit-tree.git",
       "remote": "origin",
-      "checkout": null
+      "checkout": "ce5917d2174002b7c14782020b6302711be73f5c"
     }
   }
 }
