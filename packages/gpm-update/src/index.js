@@ -98,6 +98,8 @@ class GpmUpdateCommand extends GlobsCommand {
     }
 
     if (checkout) {
+      this.logger.info('Reset to: ' + (await runGitCommand(`log --pretty=format:"%s %cd" ${checkout} -1`, dirPath)))
+
       await runGitCommand(`reset --hard ${JSON.stringify(checkout)}`, dirPath)
       await runGitCommand(`clean -fd`, dirPath)
     }

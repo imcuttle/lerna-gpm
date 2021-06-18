@@ -27,6 +27,9 @@ class GpmPullCommand extends GlobsCommand {
   get requiresGit() {
     return true
   }
+  get checkBehindRemote() {
+    return false
+  }
   async initialize() {
     super.initialize()
     this.logger.verbose('options:', this.options)
@@ -49,6 +52,14 @@ class GpmPullCommand extends GlobsCommand {
       throw new ValidationError('ENOGIT', `${dirPath} 中具有未提交的改动，请先 git commit`)
     }
     branch = await getCurrentBranch(dirPath)
+
+    const diffLog = await runGitCommand(`log --oneline HEAD..${remote}/${branch}`, dirPath)
+    if (diffLog) {
+      this.logger.info(`HEAD to ${remote}/${branch} log`)
+      diffLog.split('\n').map((info) => this.logger.info(info))
+    } else {
+      this.logger.info(`already update to latest`)
+    }
 
     if (
       !(await runCommand(

@@ -4,6 +4,7 @@
  */
 const fs = require('fs')
 const nps = require('path')
+const { format } = require('util')
 const {
   runGitCommand,
   isBehindRemote,
@@ -44,6 +45,10 @@ function lockOptions(yargs) {
     'git-lint': {
       // proxy for --no-bootstrap
       hidden: true,
+      type: 'boolean'
+    },
+    'no-git-commit': {
+      describe: 'lock without single commit',
       type: 'boolean'
     }
   }
@@ -91,6 +96,16 @@ class GpmLockCommand extends GlobsCommand {
     )
   }
 
+  async getLockedMessageList() {
+    const ret = {}
+    for (const [dir, config] of this.executeGpmEntries) {
+      const dirPath = nps.resolve(this.project.rootPath, dir)
+      const { gitCheckout } = await getGitInfoWithValidate(dirPath, { remote: config.remote })
+      ret[dir] = await runGitCommand(`log --pretty=format:"%s" ${gitCheckout} -1`, dirPath)
+    }
+    return Object.entries(ret).map(([key, value]) => `${key}: ${value}`)
+  }
+
   async executeEach(dir, { remote = 'origin', branch }) {
     const { rootPath, rootConfigLocation, config } = this.project
     const dirPath = nps.resolve(rootPath, dir)
@@ -130,7 +145,8 @@ class GpmLockCommand extends GlobsCommand {
 
   async execute() {
     const { rootPath, rootConfigLocation } = this.project
-    if (this.options.gitLint !== false && (await hasUncommitted(rootPath))) {
+    const gitLint = this.options.noGitCommit ? false : this.options.gitLint
+    if (gitLint !== false && (await hasUncommitted(rootPath))) {
       throw new ValidationError('ENOGIT', `${rootPath} 中具有未提交的改动，请先 git commit`)
     }
 
@@ -138,9 +154,12 @@ class GpmLockCommand extends GlobsCommand {
     if (this.executeGpmEntries.length && (await hasUncommitted(rootPath))) {
       await runGitCommand(`add ${JSON.stringify(rootConfigLocation)}`, rootPath)
       await runGitCommand(
-        `commit -am ${JSON.stringify(this.options.gitCommitMessage || 'chore: gpm-lock')} ${
-          process.env.NODE_ENV === 'test' ? '--no-verify' : ''
-        }`,
+        `commit -am ${JSON.stringify(
+          format(
+            this.options.gitCommitMessage || 'chore: gpm-lock\n\n %s',
+            (await this.getLockedMessageList()).join('\n')
+          )
+        )} ${process.env.NODE_ENV === 'test' ? '--no-verify' : ''}`,
         rootPath
       )
     }
