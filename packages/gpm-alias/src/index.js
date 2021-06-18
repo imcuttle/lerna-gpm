@@ -2,11 +2,8 @@
  * Alias GPM Package
  * @author imcuttle
  */
-const fs = require('fs')
 const fsExtra = require('fs-extra')
 const nps = require('path')
-const { promisify } = require('util')
-const { runCommand } = require('lerna-utils-git-command')
 
 const { GlobsCommand } = require('lerna-utils-globs-command')
 const { getFilteredPackages } = require('@lerna/filter-options')
