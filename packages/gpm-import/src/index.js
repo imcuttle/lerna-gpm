@@ -9,6 +9,7 @@ const { promisify } = require('util')
 const JSON5 = require('json5')
 const execa = require('execa')
 const template = require('lodash.template')
+const gpmAlias = require('lerna-command-gpm-alias')
 const { URL } = require('url')
 const writeJsonFile = require('write-json-file')
 const {
@@ -69,7 +70,7 @@ function importOptions(yargs) {
       type: 'string'
     },
     'no-alias': {
-      describe: 'Do not alias to package.json in tsconfig.json',
+      describe: 'Do not run gpm-alias',
       type: 'boolean'
     },
     'no-bootstrap': {
@@ -328,16 +329,14 @@ class GpmImportCommand extends Command {
 
     if (this.options.alias !== false) {
       this.logger.info('Aliasing')
-      const result = execa.commandSync(`npm install ${packageDir}`, {
-        stdin: 'ignore',
-        stdout: 'ignore',
-        stderr: 'ignore',
-        cwd: rootPath,
-        reject: false
+
+      await new Promise((resolve, reject) => {
+        // fake promise api
+        gpmAlias({
+          ...this.argv,
+          globs: [packageDir]
+        }).then(resolve, reject)
       })
-      if (result.stderr) {
-        this.logger.error(result.stderr)
-      }
 
       // const files = ['jsconfig.json', 'tsconfig.base.json', 'tsconfig.json']
       // const tsName = files.find(

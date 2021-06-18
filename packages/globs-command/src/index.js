@@ -34,7 +34,8 @@ class GlobsCommand extends Command {
   }
 
   initialize() {
-    const { globs = [] } = this.options
+    let { globs = [] } = this.options
+    globs = Array.isArray(globs) ? globs : [globs]
     this.dirs = new Set(globs.map((fp) => nps.resolve(this.project.rootPath, fp)))
 
     // include
