@@ -9,9 +9,9 @@ const { promisify } = require('util')
 const JSON5 = require('json5')
 const execa = require('execa')
 const template = require('lodash.template')
-const gpmAlias = require('lerna-command-gpm-alias')
 const { URL } = require('url')
 const writeJsonFile = require('write-json-file')
+const gpmAlias = require('@tutor/lerna-command-gpm-alias')
 const {
   SyncHook,
   SyncBailHook,
@@ -25,10 +25,10 @@ const {
 } = require('tapable')
 const { Command } = require('@lerna/command')
 const findUp = require('find-up')
-const { isGitRepo } = require('lerna-utils-git-command')
+const { isGitRepo } = require('@tutor/lerna-utils-git-command')
 const bootstrap = require('@lerna/bootstrap')
-const { getGitInfoWithValidate } = require('lerna-utils-gpm')
-const { gitRemote, stripGitRemote, getGitSha } = require('lerna-utils-git-command')
+const { getGitInfoWithValidate } = require('@tutor/lerna-utils-gpm')
+const { gitRemote, stripGitRemote, getGitSha } = require('@tutor/lerna-utils-git-command')
 const {
   gitRemoteStrip,
   getCurrentBranch,
@@ -36,7 +36,7 @@ const {
   isBehindRemote,
   runCommand,
   runGitCommand
-} = require('lerna-utils-git-command')
+} = require('@tutor/lerna-utils-git-command')
 const { ValidationError } = require('@lerna/validation-error')
 
 module.exports = factory
@@ -294,9 +294,11 @@ class GpmImportCommand extends Command {
         `remote set-url ${JSON.stringify(this.options.remote || 'origin')} ${JSON.stringify(remoteUrl)}`,
         packageDir
       )
+      await runGitCommand(`checkout ${JSON.stringify(this.options.branch || 'master')}`, packageDir)
       tmpInfo = await getGitInfo(packageDir)
     } else {
       await this.gitClone(url, packageDir)
+      await runGitCommand(`checkout ${JSON.stringify(this.options.branch || 'master')}`, packageDir)
       tmpInfo = await getGitInfo(packageDir)
     }
 
@@ -328,8 +330,6 @@ class GpmImportCommand extends Command {
     }
 
     if (this.options.alias !== false) {
-      this.logger.info('Aliasing')
-
       await new Promise((resolve, reject) => {
         // fake promise api
         gpmAlias({
