@@ -66,7 +66,9 @@ class GpmUpdateCommand extends GlobsCommand {
           ...this.argv,
           repoOrGitDir: url,
           name: dir.slice(dest.length).replace(/^\//, ''),
-          dest: dest
+          dest: dest,
+          remote,
+          branch
         }).then(resolve, reject)
       })
     }
