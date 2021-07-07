@@ -75,12 +75,13 @@ class GpmLockCommand extends GlobsCommand {
 
     const { gitCheckout, gitBranch, gitUrl } = await getGitInfoWithValidate(dirPath, { remote })
 
+    const prevConfig = JSON.parse(fs.readFileSync(rootConfigLocation).toString())
     await writeJsonFile(
       rootConfigLocation,
       {
-        ...config,
+        ...prevConfig,
         gpm: {
-          ...config.gpm,
+          ...prevConfig.gpm,
           [nps.relative(rootPath, dirPath)]: {
             branch: gitBranch,
             url: stripGitRemote(gitUrl),
