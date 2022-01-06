@@ -33,6 +33,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  exec('rm -rf node_modules')
   exec('rm -rf packages/tmp')
   exec('rm -rf tmp')
   writeFileSync(
