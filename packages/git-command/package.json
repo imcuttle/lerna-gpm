@@ -5,7 +5,7 @@
     "access": "public"
   },
   "author": "imcuttle <imcuttle@163.com>",
-  "description": "git command util",
+  "description": "Internal Package: Git Utils (eg. clone/fetch/pull/checkout/compare)",
   "main": "src",
   "scripts": {
     "packlimit": "../../scripts/run packlimit",

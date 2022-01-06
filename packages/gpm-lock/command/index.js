@@ -4,7 +4,7 @@ const { lockOptions } = require('..')
 
 exports.command = 'gpm-lock [globs...]'
 
-exports.describe = `gpm lock version command`
+exports.describe = `GPM lock version command`
 
 exports.builder = (yargs) => {
   yargs.example('$0 gpm-lock')

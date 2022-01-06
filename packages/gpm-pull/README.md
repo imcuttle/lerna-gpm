@@ -7,19 +7,16 @@
 
 > gpm pull command
 
-## Installation
-
-```bash
-npm install lerna-command-gpm-pull
-# or use yarn
-yarn add lerna-command-gpm-pull
-```
-
 ## Usage
 
-```javascript
-const gpmPull = require('lerna-command-gpm-pull')
-```
+### Options
+
+#### `gitPullCommand`
+
+执行 git command 的命令模板
+
+- Type: `string`
+- Default: `"git pull ${remote} ${branch}"`
 
 ## Contributing
 

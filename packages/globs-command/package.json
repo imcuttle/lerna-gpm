@@ -5,7 +5,7 @@
     "access": "public"
   },
   "author": "imcuttle <imcuttle@163.com>",
-  "description": "globs command util",
+  "description": "Internal Package: GPM basic class for lerna command, with globs options, check remote version, concurrency.",
   "main": "src",
   "scripts": {
     "test": "../../scripts/run test",

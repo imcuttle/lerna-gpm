@@ -4,7 +4,7 @@ const { globsOptions } = require('lerna-utils-globs-command')
 
 exports.command = 'gpm-check'
 
-exports.describe = `gpm check command`
+exports.describe = `GPM check command`
 
 exports.builder = (yargs) => {
   yargs.example('$0 gpm-check')

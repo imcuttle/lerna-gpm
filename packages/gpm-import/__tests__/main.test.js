@@ -18,39 +18,6 @@ const exec = (cmd) => {
 }
 
 describe('gpmImport', function () {
-  it.skip('spec case --help', function () {
-    const output = exec('lerna gpm-import --help')
-    expect(output).toMatchInlineSnapshot(`
-      "lerna gpm-import <repo-or-git-dir>
-
-      import git repo like git submodule
-
-      Positionals:
-        repo-or-git-dir  The path or remote url to an external git repository that contains an npm package  [required]
-
-      Import Options:
-            --git-clone-user               The user of git clone  [string]
-            --git-clone-user-env-name      The user env name of git clone  [string]
-            --git-clone-password           The password of git clone  [string]
-            --git-clone-password-env-name  The password env name of git clone  [string]
-            --no-alias                     Do not alias to package.json in tsconfig.json  [boolean]
-            --no-bootstrap                 Do not automatically chain \`lerna bootstrap\` after changes are made.  [boolean]
-            --dest                         Write to which directory  [string]
-            --name                         package name  [string]
-
-      Global Options:
-            --loglevel       What level of logs to report.  [string] [default: info]
-            --concurrency    How many processes to use when lerna parallelizes tasks.  [number] [default: 8]
-            --reject-cycles  Fail if a cycle is detected among dependencies.  [boolean]
-            --no-progress    Disable progress bars. (Always off in CI)  [boolean]
-            --no-sort        Do not sort packages topologically (dependencies before dependents).  [boolean]
-            --max-buffer     Set max-buffer (in bytes) for subcommand execution  [number]
-        -h, --help           Show help  [boolean]
-        -v, --version        Show version number  [boolean]
-      "
-    `)
-  })
-
   afterEach(() => {
     writeFileSync(
       fixture('lerna.json'),
@@ -85,7 +52,7 @@ describe('gpmImport', function () {
       remote: 'origin',
       checkout: head
     })
-    expect(readFileSync(fixture('.gitignore')).toString()).toMatchInlineSnapshot(`"/packages/tmp/"`)
+    expect(readFileSync(fixture('.gitignore')).toString()).toMatchInlineSnapshot(`"/packages/tmp"`)
     // expect(statSync(fixture('packages/tmp/node_modules')).isDirectory()).toBeTruthy()
     // expect(JSON.parse(String(readFileSync(fixture('tsconfig.json'))))).toEqual({
     //   compilerOptions: { baseUrl: '.', paths: { '@moyuyc/visit-tree': ['./packages/tmp'] } }
@@ -114,7 +81,7 @@ describe('gpmImport', function () {
     execPure('git clone https://github.com/imcuttle/visit-tree.git tmp')
     const head = execPure('cd tmp && git rev-parse HEAD')
     exec('lerna gpm-import --name tmp https://github.com/imcuttle/visit-tree.git')
-    expect(readFileSync(fixture('.gitignore')).toString()).toMatchInlineSnapshot(`"/packages/tmp/"`)
+    expect(readFileSync(fixture('.gitignore')).toString()).toMatchInlineSnapshot(`"/packages/tmp"`)
   })
 
   it('import valid git repo with username/password', function () {

@@ -18,9 +18,9 @@
 - [lerna-command-gpm-push](packages/gpm-push) - gpm push command
 - [lerna-command-gpm-update](packages/gpm-update) - update git repo
 - [lerna-command-preset-gpm](packages/preset-gpm) - gpm commands preset
-- [lerna-utils-git-command](packages/git-command) - git command util
-- [lerna-utils-globs-command](packages/globs-command) - globs command util
-- [lerna-utils-gpm](packages/gpm) - gpm utils
+- [lerna-utils-git-command](packages/git-command) - Internal Package: Git Utils (eg. clone/fetch/pull/checkout/compare)
+- [lerna-utils-globs-command](packages/globs-command) - Internal Package: GPM basic class for lerna command, with globs options, check remote version, concurrency.
+- [lerna-utils-gpm](packages/gpm) - Internal Package: GPM common utils
 
 ## Contributing
 

@@ -4,7 +4,6 @@
  */
 const fs = require('fs')
 const nps = require('path')
-const { promisify } = require('util')
 const template = require('lodash.template')
 
 const { getFilteredPackages } = require('@lerna/filter-options')
@@ -24,8 +23,7 @@ function pushOptions(yargs) {
     'git-push-command': {
       group: 'Command Options:',
       describe: 'Git Push Command Template',
-      type: 'string',
-      default: 'git push ${remote} ${branch}'
+      type: 'string'
     }
   }
   return yargs.options(opts).group(Object.keys(opts), 'Push Options:')

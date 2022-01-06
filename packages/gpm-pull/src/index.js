@@ -49,14 +49,23 @@ class GpmPullCommand extends GlobsCommand {
       throw new ValidationError('ENOGIT', dirPath + ' 非 Git 仓库')
     }
     if (await hasUncommitted(dirPath)) {
-      throw new ValidationError('ENOGIT', `${dirPath} 中具有未提交的改动，请先 git commit`)
+      if (this.options.force) {
+        this.logger.warn('Using force pull!')
+        await runGitCommand(`reset --hard`, dirPath)
+        await runGitCommand(`clean -fd`, dirPath)
+      } else {
+        throw new ValidationError('ENOGIT', `${dirPath} 中具有未提交的改动，请先 git commit`)
+      }
     }
     branch = await getCurrentBranch(dirPath)
 
     const diffLog = await runGitCommand(`log --oneline HEAD..${remote}/${branch}`, dirPath)
     if (diffLog) {
       this.logger.info(`HEAD to ${remote}/${branch} log`)
-      diffLog.split('\n').map((info) => this.logger.info(info))
+      diffLog
+        .split('\n')
+        .reverse()
+        .map((info) => this.logger.info(info))
     } else {
       this.logger.info(`already update to latest`)
     }

@@ -5,6 +5,7 @@
 
 const nps = require('path')
 const fs = require('fs')
+const fsExtra = require('fs-extra')
 const { promisify } = require('util')
 const JSON5 = require('json5')
 const execa = require('execa')
@@ -12,31 +13,13 @@ const template = require('lodash.template')
 const { URL } = require('url')
 const writeJsonFile = require('write-json-file')
 const gpmAlias = require('lerna-command-gpm-alias')
-const {
-  SyncHook,
-  SyncBailHook,
-  SyncWaterfallHook,
-  SyncLoopHook,
-  AsyncParallelHook,
-  AsyncParallelBailHook,
-  AsyncSeriesHook,
-  AsyncSeriesBailHook,
-  AsyncSeriesWaterfallHook
-} = require('tapable')
 const { Command } = require('@lerna/command')
 const findUp = require('find-up')
 const { isGitRepo } = require('lerna-utils-git-command')
 const bootstrap = require('@lerna/bootstrap')
-const { getGitInfoWithValidate } = require('lerna-utils-gpm')
+const { getGitInfoWithValidate, findNested } = require('lerna-utils-gpm')
 const { gitRemote, stripGitRemote, getGitSha } = require('lerna-utils-git-command')
-const {
-  gitRemoteStrip,
-  getCurrentBranch,
-  fetch,
-  isBehindRemote,
-  runCommand,
-  runGitCommand
-} = require('lerna-utils-git-command')
+const { runCommand, runGitCommand } = require('lerna-utils-git-command')
 const { ValidationError } = require('@lerna/validation-error')
 
 module.exports = factory
@@ -69,12 +52,28 @@ function importOptions(yargs) {
       describe: 'The password env name of git clone',
       type: 'string'
     },
+    remote: {
+      describe: 'Git remote name',
+      type: 'string'
+    },
+    branch: {
+      describe: 'Git branch name',
+      type: 'string'
+    },
+    checkout: {
+      describe: 'Git checkout keyword',
+      type: 'string'
+    },
     'no-alias': {
       describe: 'Do not run gpm-alias',
       type: 'boolean'
     },
     'no-bootstrap': {
       describe: 'Do not automatically chain `lerna bootstrap` after changes are made.',
+      type: 'boolean'
+    },
+    'nested-hoist': {
+      describe: 'Set symbolic link when hits nested gpm package',
       type: 'boolean'
     },
     bootstrap: {
@@ -212,20 +211,11 @@ class GpmImportCommand extends Command {
       remote: 'origin',
       ...this.options
     }
-    this.hooks = {
-      initialize: new AsyncSeriesBailHook(['gpmImport']),
-      writeConfig: new AsyncSeriesBailHook(['writeConfig']),
-      git: {
-        preClone: new AsyncSeriesBailHook(['params']),
-        postClone: new AsyncSeriesBailHook(['params'])
-      }
-    }
 
     await this.registerPlugins()
-    await this.hooks.initialize.promise(this)
   }
 
-  async gitClone(url, destDir) {
+  getGitUrl(url) {
     let { gitCloneUser, gitCloneUserEnvName, gitClonePassword, gitClonePasswordEnvName } = this.options
 
     gitCloneUser = gitCloneUser || (gitCloneUserEnvName && process.env[gitCloneUserEnvName])
@@ -236,10 +226,12 @@ class GpmImportCommand extends Command {
       urlObj.username = gitCloneUser || ''
       urlObj.password = gitClonePassword || ''
     } catch (e) {}
+    return String(urlObj)
+  }
 
+  async gitClone(url, destDir) {
     const { rootPath } = this.project
-    const data = { url: String(urlObj), destDir, rootPath }
-    await this.hooks.git.preClone.promise(data)
+    const data = { url: this.getGitUrl(url), destDir, rootPath }
     this.logger.info(`Cloning ${data.url}`)
     await runCommand(
       template(this.options.gitCloneCommand || 'git clone ${url} ${destDir}')({
@@ -248,30 +240,34 @@ class GpmImportCommand extends Command {
       }),
       data.rootPath
     )
-    await this.hooks.git.postClone.promise(data)
   }
 
   async writeConfigFile(url, branch, checkout, remote = 'origin') {
     const { rootPath, rootConfigLocation, config } = this.project
+
+    const nextGpmConfig = {
+      ...config.gpm,
+      [nps.relative(rootPath, await this.getTargetDir())]: {
+        branch,
+        url,
+        remote,
+        checkout
+      }
+    }
+
     await writeJsonFile(
       rootConfigLocation,
       {
         ...config,
-        gpm: {
-          ...config.gpm,
-          [nps.relative(rootPath, await this.getTargetDir())]: {
-            branch,
-            url,
-            remote,
-            checkout
-          }
-        }
+        gpm: nextGpmConfig
       },
       {
         indent: 2,
         detectIndent: true
       }
     )
+
+    return nextGpmConfig
   }
 
   async execute() {
@@ -284,32 +280,35 @@ class GpmImportCommand extends Command {
     this.logger.verbose('this.repoOrGitDir: %o', { type, url })
     this.logger.verbose('packageDir: %o', packageDir)
 
+    let remoteUrl = url
     if ('file' === type) {
       if (!(await isGitRepo(url))) {
         throw new ValidationError('ENOGIT', url + ' 非 Git 仓库')
       }
       await this.gitClone(url, packageDir)
-      const remoteUrl = await gitRemote(url, this.options.remote || 'origin')
-      await runGitCommand(
-        `remote set-url ${JSON.stringify(this.options.remote || 'origin')} ${JSON.stringify(remoteUrl)}`,
-        packageDir
-      )
-      await runGitCommand(`checkout ${JSON.stringify(this.options.branch || 'master')}`, packageDir)
-      tmpInfo = await getGitInfo(packageDir)
+      remoteUrl = await gitRemote(url, this.options.remote || 'origin')
     } else {
       await this.gitClone(url, packageDir)
-      await runGitCommand(`checkout ${JSON.stringify(this.options.branch || 'master')}`, packageDir)
-      tmpInfo = await getGitInfo(packageDir)
     }
+    await runGitCommand(
+      `remote set-url ${JSON.stringify(this.options.remote || 'origin')} ${JSON.stringify(this.getGitUrl(remoteUrl))}`,
+      packageDir
+    )
+    await runGitCommand(`checkout ${JSON.stringify(this.options.branch || 'master')}`, packageDir)
+
+    if (this.options.checkout) {
+      await runGitCommand(`reset --hard ${JSON.stringify(this.options.checkout)}`, packageDir)
+      await runGitCommand(`clean -fd`, packageDir)
+    }
+    tmpInfo = await getGitInfo(packageDir)
 
     const writeConfig = {
       gitRemote: this.options.remote,
       ...tmpInfo,
       gitUrl: stripGitRemote(tmpInfo.gitUrl)
     }
-    await this.hooks.writeConfig.promise(writeConfig)
 
-    await this.writeConfigFile(
+    const nextGpmConfig = await this.writeConfigFile(
       writeConfig.gitUrl,
       writeConfig.gitBranch,
       writeConfig.gitCheckout,
@@ -320,7 +319,7 @@ class GpmImportCommand extends Command {
     const gitIgnorePath = ensureGitIgnorePath(nps.dirname(packageDir), rootPath)
     this.logger.info('gitIgnore path: ' + gitIgnorePath)
     const gitIgnore = fs.readFileSync(gitIgnorePath, 'utf-8')
-    const ignoreRule = `/${nps.relative(nps.dirname(gitIgnorePath), packageDir)}/`
+    const ignoreRule = `/${nps.relative(nps.dirname(gitIgnorePath), packageDir)}`
     const alreadyIgnore = gitIgnore.split('\n').some((line) => {
       return line.trim() === ignoreRule
     })
@@ -328,6 +327,27 @@ class GpmImportCommand extends Command {
       this.logger.info(`正在写 .gitignore`)
       fs.writeFileSync(gitIgnorePath, [gitIgnore.trim(), ignoreRule].filter(Boolean).join('\n'))
     }
+
+    // nestedHoist start
+    const { nestedHoist } = this.options
+    if (nestedHoist) {
+      const nestedList = await findNested(packageDir, nextGpmConfig, { symblicLink: false })
+      await Promise.all(
+        nestedList.map(async ({ keyName: nestedName, mainName }) => {
+          const nestedGpmDir = nps.join(packageDir, nestedName)
+          const mainGpmDir = nps.join(this.project.rootPath, mainName)
+          await fsExtra.ensureDir(mainGpmDir)
+          this.logger.info(
+            `nestedHoist: ${nps.relative(this.project.rootPath, nestedGpmDir)} links to ${nps.relative(
+              this.project.rootPath,
+              mainGpmDir
+            )}`
+          )
+          await fsExtra.ensureSymlink(mainGpmDir, nestedGpmDir, 'dir')
+        })
+      )
+    }
+    // nestedHoist end
 
     if (this.options.alias !== false) {
       await new Promise((resolve, reject) => {
@@ -337,47 +357,6 @@ class GpmImportCommand extends Command {
           globs: [packageDir]
         }).then(resolve, reject)
       })
-
-      // const files = ['jsconfig.json', 'tsconfig.base.json', 'tsconfig.json']
-      // const tsName = files.find(
-      //   (name) => fs.existsSync(nps.join(rootPath, name)) && fs.statSync(nps.join(rootPath, name)).isFile()
-      // )
-      //
-      // // find tsconfig.json / tsconfig.base.json (like alias-hq)
-      // if (tsName) {
-      //   const tsconfigFile = nps.join(rootPath, tsName)
-      //   const tsConfig = JSON5.parse(await promisify(fs.readFile)(tsconfigFile, 'utf8'))
-      //
-      //   if (tsConfig) {
-      //     tsConfig.compilerOptions = tsConfig.compilerOptions || {}
-      //
-      //     let name = this.externalRepoBasename
-      //     if (fs.existsSync(nps.join(packageDir, 'package.json'))) {
-      //       name = require(nps.join(packageDir, 'package.json')).name || name
-      //     }
-      //
-      //     this.logger.info(`Alias in ${name} in ${tsName}`)
-      //
-      //     tsConfig.compilerOptions = {
-      //       baseUrl: '.',
-      //       ...tsConfig.compilerOptions
-      //     }
-      //
-      //     const { baseUrl, paths } = tsConfig.compilerOptions
-      //     const basePath = nps.resolve(nps.dirname(tsconfigFile), baseUrl)
-      //
-      //     tsConfig.compilerOptions.paths = {
-      //       [`${name}`]: ['./' + nps.join(nps.relative(basePath, packageDir))],
-      //       [`${name}/*`]: ['./' + nps.join(nps.relative(basePath, packageDir), '*')],
-      //       ...paths
-      //     }
-      //
-      //     await writeJsonFile(tsconfigFile, tsConfig, {
-      //       indent: 2,
-      //       detectIndent: true
-      //     })
-      //   }
-      // }
     }
     if (this.options.bootstrap !== false) {
       const argv = Object.assign({}, this.options, {

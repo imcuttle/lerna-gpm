@@ -24,7 +24,6 @@
     "lerna-utils-git-command": "^0.0.11",
     "lerna-utils-gpm": "^0.0.12",
     "lodash.template": "^4.5.0",
-    "tapable": "^2.2.0",
     "write-json-file": "^4.3.0"
   },
   "keywords": [

@@ -3,10 +3,11 @@
  * @author imcuttle
  */
 const fs = require('fs')
+const fsExtra = require('fs-extra')
 const nps = require('path')
 const { promisify } = require('util')
 const gpmImport = require('lerna-command-gpm-import')
-const { hasUncommitted } = require('lerna-utils-git-command')
+const { hasUncommitted, runCommand: runCommandUntil } = require('lerna-utils-git-command')
 const { isBehindRemote, isAheadOfRemote } = require('lerna-utils-git-command')
 const {
   gitRemote,
@@ -14,14 +15,32 @@ const {
   isGitRepo,
   getCurrentBranch,
   fetch,
-  runGitCommand
+  runGitCommand,
+  getGitSha,
+  compare
 } = require('lerna-utils-git-command')
 
 const { GlobsCommand } = require('lerna-utils-globs-command')
+const { findNested } = require('lerna-utils-gpm')
 const { getFilteredPackages } = require('@lerna/filter-options')
 const { ValidationError } = require('@lerna/validation-error')
 
 module.exports = factory
+module.exports.gpmUpdateOptions = gpmUpdateOptions
+
+function gpmUpdateOptions(yargs) {
+  const opts = {
+    'no-git-lint': {
+      describe: 'Do not check root git has uncommitted before execute lock',
+      type: 'boolean'
+    },
+    'git-lint': {
+      hidden: true,
+      type: 'boolean'
+    }
+  }
+  return yargs.options(opts).group(Object.keys(opts), 'GpmUpdate Options:')
+}
 
 function factory(argv) {
   return new GpmUpdateCommand(argv)
@@ -32,6 +51,9 @@ class GpmUpdateCommand extends GlobsCommand {
     return true
   }
   async initialize() {
+    if (!!(await findNested(this.project.rootPath)).length) {
+      throw new ValidationError('EGPM_NESTED', 'GPM 资源存在软链，请不要在子目录中执行 gpm-update')
+    }
     const { rootPath, rootConfigLocation, config } = this.project
     if (!config.gpm || !Object.keys(config.gpm).length) {
       throw new ValidationError('ENOGPM', rootConfigLocation + ' 不存在 gpm 配置')
@@ -58,7 +80,13 @@ class GpmUpdateCommand extends GlobsCommand {
   async executeEach(dir, { remote = 'origin', branch = 'master', checkout, url }) {
     const { rootPath, rootConfigLocation, config } = this.project
     const dirPath = nps.resolve(rootPath, dir)
-    if (!fs.existsSync(dirPath)) {
+
+    if (
+      !fs.existsSync(dirPath) ||
+      (fsExtra.statSync(dirPath).isDirectory() &&
+        !(await fsExtra.readdir(dirPath)).length &&
+        !(await isGitRepo(dirPath)))
+    ) {
       const dest = this.getPackageDirectories().find((str) => dir.startsWith(str))
       await new Promise((resolve, reject) => {
         // fake promise api
@@ -68,6 +96,7 @@ class GpmUpdateCommand extends GlobsCommand {
           name: dir.slice(dest.length).replace(/^\//, ''),
           dest: dest,
           remote,
+          checkout,
           branch
         }).then(resolve, reject)
       })
@@ -81,7 +110,7 @@ class GpmUpdateCommand extends GlobsCommand {
       throw new ValidationError('ENOGIT', 'git remote url 不匹配')
     }
 
-    if (await hasUncommitted(dirPath)) {
+    if (this.options.gitLint !== false && (await hasUncommitted(dirPath))) {
       throw new ValidationError('ENOGIT', `${dirPath} 中具有未提交的改动，请先 git commit`)
     }
 
@@ -104,6 +133,29 @@ class GpmUpdateCommand extends GlobsCommand {
 
       await runGitCommand(`reset --hard ${JSON.stringify(checkout)}`, dirPath)
       await runGitCommand(`clean -fd`, dirPath)
+    }
+
+    // 子 GPM 嵌套对比版本
+    const nestedList = await findNested(dirPath, this.project.config.gpm || {})
+    for (const { mainName, config, dirName: subDirname, keyName, mainConfig } of nestedList) {
+      const mainDirname = nps.join(this.project.rootPath, mainName)
+      const mainSha = mainConfig.checkout
+      const subSha = config.checkout
+      await fetch(mainConfig.remote || 'origin', mainConfig.branch || 'master', mainDirname)
+      const flag = await compare(mainSha, subSha, mainDirname)
+      if (flag === 0) {
+        continue
+      }
+
+      if (flag < 0) {
+        this.logger.warn(
+          `存在嵌套：${mainName} 滞后于 ${nps.relative(
+            rootPath,
+            subDirname
+          )}, 请执行 lerna gpm-pull ${mainName} 进行更新`
+        )
+        return
+      }
     }
   }
 

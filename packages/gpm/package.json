@@ -5,7 +5,7 @@
     "access": "public"
   },
   "author": "imcuttle <imcuttle@163.com>",
-  "description": "gpm utils",
+  "description": "Internal Package: GPM common utils",
   "main": "src",
   "scripts": {
     "test": "../../scripts/run test",
@@ -14,6 +14,7 @@
     "version": "npm test && npm run packlimit"
   },
   "dependencies": {
+    "@lerna/project": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
     "lerna-utils-git-command": "^0.0.11"
   },

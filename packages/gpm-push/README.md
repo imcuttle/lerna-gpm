@@ -7,19 +7,16 @@
 
 > gpm push command
 
-## Installation
-
-```bash
-npm install lerna-command-gpm-push
-# or use yarn
-yarn add lerna-command-gpm-push
-```
-
 ## Usage
 
-```javascript
-const gpmPush = require('lerna-command-gpm-push')
-```
+### Options
+
+#### `gitPushCommand`
+
+执行 git command 的命令模板
+
+- Type: `string`
+- Default: `"git push ${remote} ${branch}"`
 
 ## Contributing
 

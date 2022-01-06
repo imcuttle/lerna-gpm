@@ -18,7 +18,9 @@
     "@lerna/validation-error": "^4.0.0",
     "lerna-command-gpm-import": "^0.0.16",
     "lerna-utils-git-command": "^0.0.11",
-    "lerna-utils-globs-command": "^0.0.12"
+    "lerna-utils-globs-command": "^0.0.12",
+    "lerna-utils-gpm": "^0.0.12",
+    "fs-extra": "^10.0.0"
   },
   "keywords": [
     "imcuttle",

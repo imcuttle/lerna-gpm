@@ -7,19 +7,36 @@
 
 > Alias GPM Package
 
-## Installation
-
-```bash
-npm install lerna-command-gpm-alias
-# or use yarn
-yarn add lerna-command-gpm-alias
-```
-
 ## Usage
 
-```javascript
-const gpmAlias = require('lerna-command-gpm-alias')
+```bash
+lerna gpm-alias
 ```
+
+```json5
+// lerna.json
+{
+  packages: ['packages/*'],
+  extendCommands: ['@tutor/lerna-command-gpm-alias'],
+  command: {
+    'gpm-alias': {
+      // be default
+      aliasTypes: ['link', 'ts-js-config']
+    }
+  },
+  version: '0.0.0',
+  gpm: {}
+}
+```
+
+### Options
+
+#### `aliasTypes`
+
+gpm 资源链接方式；`link` 为使用软链方式，链接至 node_modules/PKG_NAME；`ts-js-config` 为修改 `tsconfig` 和 `jsconfig`
+
+- Type: `Array<'link' | 'ts-js-config'>`
+- Default: `['link', 'ts-js-config']`
 
 ## Contributing
 

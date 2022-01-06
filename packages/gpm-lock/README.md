@@ -7,19 +7,68 @@
 
 > gpm lock version command
 
-## Installation
+在 A 同学在希望修改 GPM 资源时
 
-```bash
-npm install lerna-command-gpm-lock
-# or use yarn
-yarn add lerna-command-gpm-lock
-```
+1. 在 gpm 资源目录中执行 git commit xxx && git push
+2. 在已有 GPM 配置的 root 项目目录中，执行 npx lerna gpm-lock  
+   会自动帮你更新 gpm 当前本地版本至 lerna.json 中
+3. 在 root 项目目录中，执行 git commit xx && git push 即可
 
 ## Usage
 
-```javascript
-const gpmLock = require('lerna-command-gpm-lock')
+```bash
+lerna gpm-lock [...globs]
 ```
+
+```json5
+// lerna.json
+{
+  packages: ['packages/*'],
+  extendCommands: ['@tutor/lerna-command-gpm-alias'],
+  command: {
+    'gpm-lock': {}
+  },
+  version: '0.0.0',
+  gpm: {}
+}
+```
+
+### Options
+
+#### `push`
+
+是否执行 gpm-push (git push)，继承 [gpm-push](../gpm-push) 参数
+
+- Type: `boolean`
+- Default: `false`
+
+#### `gitLint`
+
+是否进行 git 校验，如判断是否有未提交改动，是否有未推送提交
+
+- Type: `boolean`
+- Default: `true`
+
+#### `nestedLock`
+
+对于嵌套场景下的 gpm 资源，是否锁定嵌套 gpm 资源版本
+
+- Type: `boolean`
+- Default: `false`
+
+#### `commit`
+
+lock 导致的 lerna.json，是否执行 git commit
+
+- Type: `boolean`
+- Default: `true`
+
+#### `gitCommitMessage`
+
+自动执行的 git commit 的 commit message
+
+- Type: `string`
+- Default: `"chore: gpm-lock"`
 
 ## Contributing
 

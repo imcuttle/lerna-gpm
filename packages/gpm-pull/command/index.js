@@ -4,7 +4,7 @@ const { lockOptions } = require('lerna-command-gpm-lock')
 
 exports.command = 'gpm-pull [globs...]'
 
-exports.describe = `gpm pull command`
+exports.describe = `GPM pull command`
 
 exports.builder = (yargs) => {
   yargs.example('$0 gpm-pull').options({
@@ -16,8 +16,7 @@ exports.builder = (yargs) => {
     'git-pull-command': {
       group: 'Command Options:',
       describe: 'git pull 的执行命令模板',
-      type: 'string',
-      default: 'git pull ${remote} ${branch}'
+      type: 'string'
     }
   })
 
