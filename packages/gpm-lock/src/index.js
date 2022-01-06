@@ -74,7 +74,10 @@ class GpmLockCommand extends GlobsCommand {
   }
   async initialize() {
     if (!!(await findNested(this.project.rootPath)).length) {
-      throw new ValidationError('EGPM_NESTED', 'GPM 资源存在软链，请不要在子目录中执行 gpm-lock')
+      throw new ValidationError(
+        'EGPM_NESTED',
+        'GPM package contains symbolic link, please do not execute gpm-lock in sub-directory.'
+      )
     }
 
     super.initialize()
@@ -141,7 +144,9 @@ class GpmLockCommand extends GlobsCommand {
             await this.addGpmConfig(nps.join(dirPath, 'lerna.json'), keyName, mainConfig)
             this.logger.info(`Locked nested package ${JSON.stringify(keyName)} in`, dirPath)
           } else {
-            this.logger.warn(`主项目 ${mainName} 滞后于 子项目 ${keyName}, 请执行 lerna gpm-pull ${mainName} 进行更新`)
+            this.logger.warn(
+              `Main project ${mainName} is behinds of sub-project ${keyName}, Please execute \`lerna gpm-pull ${mainName}\` for updating`
+            )
           }
         }
       }
@@ -153,10 +158,10 @@ class GpmLockCommand extends GlobsCommand {
     const { gitLint } = this.options
     const dirPath = nps.resolve(rootPath, dir)
     if (!fs.existsSync(dirPath)) {
-      throw new ValidationError('ENOFILE', dirPath + ' 文件不存在')
+      throw new ValidationError('ENOFILE', dirPath + ' file not found')
     }
     if (!(await isGitRepo(dirPath))) {
-      throw new ValidationError('ENOGIT', dirPath + ' 非 Git 仓库')
+      throw new ValidationError('ENOGIT', dirPath + ' is not git repo.')
     }
 
     // 根据本地 git 更新 lerna.json gpm 配置
@@ -189,7 +194,7 @@ class GpmLockCommand extends GlobsCommand {
     const { rootPath, rootConfigLocation } = this.project
     const gitLint = this.options.noGitCommit ? false : this.options.gitLint
     if (gitLint !== false && (await hasUncommitted(rootPath))) {
-      throw new ValidationError('ENOGIT', `${rootPath} 中具有未提交的改动，请先 git commit`)
+      throw new ValidationError('ENOGIT', `${rootPath} has uncommitted changes，Please execute "git commit" firstly.`)
     }
 
     await super.execute()

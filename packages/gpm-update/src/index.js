@@ -52,11 +52,14 @@ class GpmUpdateCommand extends GlobsCommand {
   }
   async initialize() {
     if (!!(await findNested(this.project.rootPath)).length) {
-      throw new ValidationError('EGPM_NESTED', 'GPM 资源存在软链，请不要在子目录中执行 gpm-update')
+      throw new ValidationError(
+        'EGPM_NESTED',
+        'GPM package contains symbolic link, please do not execute gpm-update in sub-directory.'
+      )
     }
     const { rootPath, rootConfigLocation, config } = this.project
     if (!config.gpm || !Object.keys(config.gpm).length) {
-      throw new ValidationError('ENOGPM', rootConfigLocation + ' 不存在 gpm 配置')
+      throw new ValidationError('ENOGPM', rootConfigLocation + ' config of GPM is not found.')
     }
     super.initialize()
 
@@ -103,24 +106,24 @@ class GpmUpdateCommand extends GlobsCommand {
     }
 
     if (!(await isGitRepo(dirPath))) {
-      throw new ValidationError('ENOGIT', dirPath + ' 非 Git 仓库')
+      throw new ValidationError('ENOGIT', dirPath + ' is not git repo')
     }
     const gitUrl = await gitRemoteStrip(dirPath, remote)
     if (gitUrl !== url) {
-      throw new ValidationError('ENOGIT', 'git remote url 不匹配')
+      throw new ValidationError('ENOGIT', 'git remote url is not matched')
     }
 
     if (this.options.gitLint !== false && (await hasUncommitted(dirPath))) {
-      throw new ValidationError('ENOGIT', `${dirPath} 中具有未提交的改动，请先 git commit`)
+      throw new ValidationError('ENOGIT', `${dirPath} has uncommitted changes，Please execute "git commit" firstly.`)
     }
 
     // 按照配置的 remote / url / branch / checkout 进行更新
     if (!(await fetch(remote, branch, dirPath))) {
-      throw new ValidationError('ENOGIT', `fetch 远端代码失败`)
+      throw new ValidationError('ENOGIT', `fetch failed`)
     }
 
     if (await isAheadOfRemote(remote, branch, dirPath)) {
-      throw new ValidationError('ENOGIT', `${dirPath} 存在未推送至远端的 git commit`)
+      throw new ValidationError('ENOGIT', `${dirPath} has unpushed commits`)
     }
 
     const gitBranch = await getCurrentBranch(dirPath)
@@ -149,10 +152,10 @@ class GpmUpdateCommand extends GlobsCommand {
 
       if (flag < 0) {
         this.logger.warn(
-          `存在嵌套：${mainName} 滞后于 ${nps.relative(
+          `Found the nested：${mainName} is behind of ${nps.relative(
             rootPath,
             subDirname
-          )}, 请执行 lerna gpm-pull ${mainName} 进行更新`
+          )}, Please execute \`lerna gpm-pull ${mainName}\` for updating.`
         )
         return
       }

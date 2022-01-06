@@ -46,13 +46,13 @@ class GpmPushCommand extends GlobsCommand {
     const { rootPath, rootConfigLocation, config } = this.project
     const dirPath = nps.resolve(rootPath, dir)
     if (!fs.existsSync(dirPath)) {
-      throw new ValidationError('ENOFILE', dirPath + ' 文件不存在')
+      throw new ValidationError('ENOFILE', dirPath + ' file is not found')
     } else {
       if (!(await isGitRepo(dirPath))) {
-        throw new ValidationError('ENOGIT', dirPath + ' 非 Git 仓库')
+        throw new ValidationError('ENOGIT', dirPath + ' is not a git repo')
       }
       if (await hasUncommitted(dirPath)) {
-        throw new ValidationError('ENOGIT', `${dirPath} 中具有未提交的改动，请先 git commit`)
+        throw new ValidationError('ENOGIT', `${dirPath} has uncommitted changes，Please execute "git commit" firstly.`)
       }
 
       await runCommand(

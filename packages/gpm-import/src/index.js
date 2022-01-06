@@ -317,14 +317,14 @@ class GpmImportCommand extends Command {
 
     // 写 gitignore
     const gitIgnorePath = ensureGitIgnorePath(nps.dirname(packageDir), rootPath)
-    this.logger.info('gitIgnore path: ' + gitIgnorePath)
+    this.logger.verbose('gitIgnore path: ' + gitIgnorePath)
     const gitIgnore = fs.readFileSync(gitIgnorePath, 'utf-8')
     const ignoreRule = `/${nps.relative(nps.dirname(gitIgnorePath), packageDir)}`
     const alreadyIgnore = gitIgnore.split('\n').some((line) => {
       return line.trim() === ignoreRule
     })
     if (!alreadyIgnore) {
-      this.logger.info(`正在写 .gitignore`)
+      this.logger.info(`Writing .gitignore`)
       fs.writeFileSync(gitIgnorePath, [gitIgnore.trim(), ignoreRule].filter(Boolean).join('\n'))
     }
 
@@ -338,7 +338,7 @@ class GpmImportCommand extends Command {
           const mainGpmDir = nps.join(this.project.rootPath, mainName)
           await fsExtra.ensureDir(mainGpmDir)
           this.logger.info(
-            `nestedHoist: ${nps.relative(this.project.rootPath, nestedGpmDir)} links to ${nps.relative(
+            `[nestedHoist] ${nps.relative(this.project.rootPath, nestedGpmDir)} links to ${nps.relative(
               this.project.rootPath,
               mainGpmDir
             )}`
@@ -379,7 +379,7 @@ class GpmImportCommand extends Command {
       })
     }
 
-    this.logger.success(`导入 ${nps.relative(this.execOpts.cwd, packageDir)} 成功!`)
+    this.logger.success(`Imported ${nps.relative(this.execOpts.cwd, packageDir)}!`)
   }
   static name = 'gpm-import'
 }

@@ -4,7 +4,7 @@ const { gpmUpdateOptions } = require('..')
 
 exports.command = 'gpm-update [globs...]'
 
-exports.describe = `update git repo`
+exports.describe = `Update git repo`
 
 exports.builder = (yargs) => {
   yargs.example('$0 gpm-update').options({})

@@ -4,7 +4,7 @@ const { pushOptions } = require('..')
 
 exports.command = 'gpm-push [globs...]'
 
-exports.describe = `gpm push command`
+exports.describe = `GPM push command`
 
 exports.builder = (yargs) => {
   yargs.example('$0 gpm-push')

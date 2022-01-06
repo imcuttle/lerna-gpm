@@ -10,12 +10,12 @@ exports.builder = (yargs) => {
   yargs.example('$0 gpm-pull').options({
     lock: {
       group: 'Command Options:',
-      describe: '执行 gpm-lock',
+      describe: 'Execute gpm-lock after pull',
       type: 'boolean'
     },
     'git-pull-command': {
       group: 'Command Options:',
-      describe: 'git pull 的执行命令模板',
+      describe: 'git pull command template string',
       type: 'string'
     }
   })

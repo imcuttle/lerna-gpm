@@ -21,7 +21,7 @@ const getGitInfoWithValidate = (exports.getGitInfoWithValidate = async (
   { remote = 'origin', gitLint } = {}
 ) => {
   if (gitLint !== false && (await hasUncommitted(localDir))) {
-    throw new ValidationError('GIT', `${localDir} 中具有未提交的改动，请先 git commit`)
+    throw new ValidationError('GIT', `${localDir} has uncommitted changes，Please execute "git commit" firstly.`)
   }
 
   const branch = await getCurrentBranch(localDir)

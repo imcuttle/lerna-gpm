@@ -32,8 +32,6 @@ class GpmPullCommand extends GlobsCommand {
   }
   async initialize() {
     super.initialize()
-    this.logger.verbose('options:', this.options)
-
     this.validPackages = await getFilteredPackages(this.packageGraph, this.execOpts, {
       ...this.options
     })
@@ -43,10 +41,10 @@ class GpmPullCommand extends GlobsCommand {
     const { rootPath } = this.project
     const dirPath = nps.resolve(rootPath, dir)
     if (!fs.existsSync(dirPath)) {
-      throw new ValidationError('ENOFILE', dirPath + ' 文件不存在')
+      throw new ValidationError('ENOFILE', dirPath + ' file is not found')
     }
     if (!(await isGitRepo(dirPath))) {
-      throw new ValidationError('ENOGIT', dirPath + ' 非 Git 仓库')
+      throw new ValidationError('ENOGIT', dirPath + ' is not a git repo')
     }
     if (await hasUncommitted(dirPath)) {
       if (this.options.force) {
@@ -54,7 +52,7 @@ class GpmPullCommand extends GlobsCommand {
         await runGitCommand(`reset --hard`, dirPath)
         await runGitCommand(`clean -fd`, dirPath)
       } else {
-        throw new ValidationError('ENOGIT', `${dirPath} 中具有未提交的改动，请先 git commit`)
+        throw new ValidationError('ENOGIT', `${dirPath} has uncommitted changes，Please execute "git commit" firstly.`)
       }
     }
     branch = await getCurrentBranch(dirPath)
