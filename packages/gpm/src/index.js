@@ -26,11 +26,11 @@ const getGitInfoWithValidate = (exports.getGitInfoWithValidate = async (
 
   const branch = await getCurrentBranch(localDir)
   if (!(await fetch(remote, branch, localDir))) {
-    throw new ValidationError('GIT', `fetch 远端代码失败`)
+    throw new ValidationError('GIT', `fetch failed`)
   }
 
   if (await isAheadOfRemote(remote, branch, localDir)) {
-    throw new ValidationError('GIT', `${localDir} 存在未推送至远端的 git commit`)
+    throw new ValidationError('GIT', `${localDir} has unpushed commits`)
   }
 
   const gitUrl = await gitRemote(localDir, remote)

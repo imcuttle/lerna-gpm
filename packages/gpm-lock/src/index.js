@@ -161,7 +161,7 @@ class GpmLockCommand extends GlobsCommand {
       throw new ValidationError('ENOFILE', dirPath + ' file not found')
     }
     if (!(await isGitRepo(dirPath))) {
-      throw new ValidationError('ENOGIT', dirPath + ' is not git repo.')
+      throw new ValidationError('ENOGIT', dirPath + ' is not a git repo.')
     }
 
     // 根据本地 git 更新 lerna.json gpm 配置

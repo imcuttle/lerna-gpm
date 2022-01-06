@@ -283,7 +283,7 @@ class GpmImportCommand extends Command {
     let remoteUrl = url
     if ('file' === type) {
       if (!(await isGitRepo(url))) {
-        throw new ValidationError('ENOGIT', url + ' 非 Git 仓库')
+        throw new ValidationError('ENOGIT', url + ' not a git repo')
       }
       await this.gitClone(url, packageDir)
       remoteUrl = await gitRemote(url, this.options.remote || 'origin')

@@ -38,7 +38,7 @@ describe('gpmImport', function () {
   })
   it('import invalid git dir', function () {
     execPure('mkdir -p tmp/')
-    expect(() => exec('lerna gpm-import tmp')).toThrowError(/非 Git 仓库/)
+    expect(() => exec('lerna gpm-import tmp')).toThrowError(/not a git repo/)
   })
   it('import valid git dir', function () {
     execPure('git clone https://github.com/imcuttle/visit-tree.git tmp')

@@ -106,7 +106,7 @@ class GpmUpdateCommand extends GlobsCommand {
     }
 
     if (!(await isGitRepo(dirPath))) {
-      throw new ValidationError('ENOGIT', dirPath + ' is not git repo')
+      throw new ValidationError('ENOGIT', dirPath + ' is not a git repo')
     }
     const gitUrl = await gitRemoteStrip(dirPath, remote)
     if (gitUrl !== url) {

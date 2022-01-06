@@ -77,7 +77,7 @@ class GpmPullCommand extends GlobsCommand {
         dirPath
       ))
     ) {
-      throw new ValidationError('GIT', `pull 远端代码失败`)
+      throw new ValidationError('GIT', `pull failed`)
     }
   }
 
