@@ -18,6 +18,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - run: git config --global user.email "imcuttle@163.com"
+      - run: git config --global user.name "imcuttle"
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test -- --coverage
