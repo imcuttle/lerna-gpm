@@ -28,7 +28,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/imcuttle/lerna-commands.git",
+    "url": "git+https://github.com/imcuttle/lerna-gpm.git",
     "directory": "packages/globs-command"
   }
 }
