@@ -1,6 +1,6 @@
 {
   "name": "lerna-command-gpm-alias",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publishConfig": {
     "access": "public"
   },
@@ -19,7 +19,7 @@
     "@lerna/validation-error": "^4.0.0",
     "fs-extra": "^10.0.0",
     "json5": "^2.2.0",
-    "lerna-utils-globs-command": "^0.0.12",
+    "lerna-utils-globs-command": "^0.0.13",
     "write-json-file": "^4.3.0"
   },
   "keywords": [
@@ -36,6 +36,6 @@
     "directory": "packages/gpm-alias"
   },
   "devDependencies": {
-    "lerna-command-preset-gpm": "^0.0.18"
+    "lerna-command-preset-gpm": "^0.0.19"
   }
 }

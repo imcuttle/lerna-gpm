@@ -1,6 +1,6 @@
 {
   "name": "lerna-command-gpm-check",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "publishConfig": {
     "access": "public"
   },
@@ -16,8 +16,8 @@
   "dependencies": {
     "@lerna/filter-options": "^4.0.0",
     "@lerna/validation-error": "^4.0.0",
-    "lerna-utils-git-command": "^0.0.11",
-    "lerna-utils-globs-command": "^0.0.12"
+    "lerna-utils-git-command": "^0.0.12",
+    "lerna-utils-globs-command": "^0.0.13"
   },
   "keywords": [
     "imcuttle",
@@ -33,6 +33,6 @@
     "directory": "packages/gpm-check"
   },
   "devDependencies": {
-    "lerna-command-preset-gpm": "^0.0.18"
+    "lerna-command-preset-gpm": "^0.0.19"
   }
 }

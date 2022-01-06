@@ -1,11 +1,6 @@
 {
-  "packages": [
-    "packages/*"
-  ],
-  "extendCommands": [
-    "../..",
-    "../../node_modules/lerna-command-gpm-import"
-  ],
+  "packages": ["packages/*"],
+  "extendCommands": ["../..", "../../node_modules/lerna-command-gpm-import"],
   "command": {},
   "version": "0.0.0",
   "gpm": {}
