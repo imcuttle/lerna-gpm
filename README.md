@@ -1,12 +1,12 @@
-# lerna-commands
+# lerna-gpm
 
-[![Build status](https://img.shields.io/travis/imcuttle/lerna-commands/master.svg?style=flat-square)](https://travis-ci.com/imcuttle/lerna-commands)
-[![Test coverage](https://img.shields.io/codecov/c/github/imcuttle/lerna-commands.svg?style=flat-square)](https://codecov.io/github/imcuttle/lerna-commands?branch=master)
+[![Build status](https://img.shields.io/github/workflow/status/imcuttle/lerna-gpm/Test/master?style=flat-square)](https://github.com/imcuttle/lerna-gpm/actions)
+[![Test coverage](https://img.shields.io/codecov/c/github/imcuttle/lerna-gpm/master.svg?style=flat-square)](https://codecov.io/github/imcuttle/lerna-gpm?branch=master)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg?style=flat-square)](https://lernajs.io/)
 [![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://prettier.io/)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
 
-> Some useful lerna command extensions (eg. **G**it **P**ackage **M**anager)
+> Lerna command extensions for **G**it **P**ackage **M**anager
 
 ## Packages
 
