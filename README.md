@@ -8,6 +8,41 @@
 
 > Lerna command extensions for **G**it **P**ackage **M**anager
 
+## Why use GPM?
+
+Use git for sharing node package, which integrated with lerna (lerna.json)
+
+```bash
+npm i lerna-cli lerna-command-preset-gpm -D
+```
+
+```json5
+{
+  packages: ['packages/*'],
+  extendCommands: ['lerna-command-preset-gpm'],
+  command: {},
+  gpm: {
+    'packages/shared-lib': {
+      branch: 'master',
+      url: 'git-url',
+      remote: 'origin',
+      checkout: 'commit-sha'
+    }
+  }
+}
+```
+
+After executing `lerna gpm-update`, the files are as following.
+
+```text
+lerna.json
+.gitignore # `/packages/shared-lib` will be appended here
+packages/
+  shared-lib/
+    .git/
+    ...
+```
+
 ## Packages
 
 - [lerna-command-gpm-alias](packages/gpm-alias) - Alias GPM Package
